@@ -1,0 +1,853 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Book Parking | SmartPark</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f7f3;
+    color: #17251d;
+}
+
+nav {
+    height: 72px;
+    background: white;
+    border-bottom: 1px solid #e1e6e1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 800;
+    color: #174d35;
+}
+
+.logo span {
+    color: #c77b17;
+}
+
+.navlinks {
+    display: flex;
+    gap: 28px;
+}
+
+.navlinks a {
+    text-decoration: none;
+    color: #5d6961;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.location {
+    background: #edf3ee;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 40px auto 70px;
+}
+
+.back {
+    display: inline-block;
+    text-decoration: none;
+    color: #617067;
+    font-size: 13px;
+    margin-bottom: 22px;
+}
+
+.heading small {
+    color: #c77b17;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.heading h1 {
+    font-size: 38px;
+    margin-top: 7px;
+}
+
+.heading p {
+    color: #77827a;
+    margin-top: 7px;
+}
+
+.booking-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid #e0e5df;
+    border-radius: 18px;
+    padding: 25px;
+}
+
+.panel h2 {
+    font-size: 19px;
+    margin-bottom: 20px;
+}
+
+.field {
+    margin-bottom: 19px;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4e5b53;
+    margin-bottom: 7px;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d7ded8;
+    border-radius: 9px;
+    outline: none;
+    background: white;
+    font-size: 14px;
+}
+
+.slots {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 9px;
+}
+
+.slot {
+    padding: 12px 5px;
+    border: 1px solid #cfd8d1;
+    background: #f3f8f4;
+    color: #246443;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.slot.selected {
+    background: #174d35;
+    color: white;
+    border-color: #174d35;
+}
+
+.slot.booked {
+    background: #f5dddd;
+    color: #a53d3d;
+    border-color: #e5bebe;
+    cursor: not-allowed;
+}
+
+.legend {
+    display: flex;
+    gap: 18px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: #77827a;
+}
+
+.legend span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.green-dot {
+    background: #55a979;
+}
+
+.red-dot {
+    background: #c85b5b;
+}
+
+.summary {
+    background: #173c2b;
+    color: white;
+    border-radius: 18px;
+    padding: 25px;
+    position: sticky;
+    top: 20px;
+}
+
+.summary-label {
+    color: #b8c9be;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+.summary h2 {
+    font-size: 22px;
+    margin-top: 6px;
+}
+
+.summary-location {
+    color: #b8c9be;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.summary-line {
+    border-top: 1px solid rgba(255,255,255,.15);
+    margin: 22px 0;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 13px;
+}
+
+.summary-row span {
+    color: #b8c9be;
+}
+
+.total {
+    border-top: 1px solid rgba(255,255,255,.15);
+    padding-top: 18px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.total span {
+    color: #b8c9be;
+    font-size: 12px;
+}
+
+.total strong {
+    font-size: 27px;
+}
+
+.book-btn {
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px;
+    border: none;
+    border-radius: 9px;
+    background: #d89a3b;
+    color: #17251d;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.book-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.message {
+    display: none;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 9px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.message.error {
+    display: block;
+    background: #f8e4e4;
+    color: #9b3c3c;
+}
+
+.message.success {
+    display: block;
+    background: #e4f3e9;
+    color: #286b45;
+}
+
+.demo-note {
+    margin-top: 18px;
+    padding: 12px;
+    background: rgba(255,255,255,.07);
+    border-radius: 9px;
+    color: #b8c9be;
+    font-size: 10px;
+}
+
+@media(max-width:800px) {
+    .navlinks {
+        display: none;
+    }
+
+    .booking-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .summary {
+        position: static;
+    }
+
+    .slots {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        Smart<span>Park</span>
+    </div>
+
+    <div class="navlinks">
+        <a href="/">Home</a>
+        <a href="/parking">Find Parking</a>
+        <a href="/my-booking">My Booking</a>
+        <a href="/static/admin.html">For Owners</a>
+    </div>
+
+    <div class="location">
+         PCMC
+    </div>
+</nav>
+
+<div class="container">
+
+    <a class="back" href="/parking">
+        â† Back to parking
+    </a>
+
+    <div class="heading">
+        <small>RESERVE YOUR SPACE</small>
+
+        <h1>Book your parking spot.</h1>
+
+        <p>
+            Choose your vehicle, parking duration and available slot.
+        </p>
+    </div>
+
+    <div class="booking-layout">
+
+        <div class="panel">
+
+            <h2>Booking details</h2>
+
+            <div class="field">
+                <label>PARKING LOCATION</label>
+
+                <input
+                    type="text"
+                    id="parkingName"
+                    value="{{ parking_name }}"
+                    readonly
+                >
+            </div>
+
+            <div class="field">
+                <label>VEHICLE NUMBER</label>
+
+                <input
+                    type="text"
+                    id="vehicleNumber"
+                    placeholder="e.g. MH12AB1234"
+                    maxlength="15"
+                >
+            </div>
+
+            <div class="field">
+                <label>VEHICLE TYPE</label>
+
+                <select id="vehicleType">
+                    <option value="Car">Car</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Bike">Bike</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>PARKING DURATION</label>
+
+                <select id="duration" onchange="updateSummary()">
+                    <option value="1">1 Hour</option>
+                    <option value="2">2 Hours</option>
+                    <option value="3">3 Hours</option>
+                    <option value="4">4 Hours</option>
+                </select>
+            </div>
+
+            <div class="field">
+
+                <label>SELECT PARKING SLOT</label>
+
+                <div class="slots" id="slots"></div>
+
+                <div class="legend">
+                    <span>
+                        <i class="dot green-dot"></i>
+                        Available
+                    </span>
+
+                    <span>
+                        <i class="dot red-dot"></i>
+                        Booked
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary">
+
+            <div class="summary-label">
+                BOOKING SUMMARY
+            </div>
+
+            <h2 id="summaryParking">
+                {{ parking_name }}
+            </h2>
+
+            <div class="summary-location">
+                PCMC · SmartPark
+            </div>
+
+            <div class="summary-line"></div>
+
+            <div class="summary-row">
+                <span>Selected slot</span>
+
+                <strong id="summarySlot">
+                    Not selected
+                </strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Duration</span>
+
+                <strong id="summaryDuration">
+                    1 hour
+                </strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Rate</span>
+
+                <strong id="rate">
+                    ₹40 / hour
+                </strong>
+            </div>
+
+            <div class="total">
+                <span>Total amount</span>
+
+                <strong id="totalAmount">
+                    ₹40
+                </strong>
+            </div>
+
+            <button
+                class="book-btn"
+                id="bookButton"
+                onclick="confirmBooking()"
+            >
+                Continue to Payment
+            </button>
+
+            <div id="message" class="message"></div>
+
+            <div class="demo-note">
+                Demo Version: payment is simulated.
+                No real money will be collected.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const validSlots = [
+    "A1","A2","A3","A4","A5",
+    "B1","B2","B3","B4","B5",
+    "C1","C2","C3","C4","C5"
+];
+
+let selectedSlot = "{{ selected_slot }}";
+let bookedSlots = [];
+
+
+/* LOAD LIVE SLOTS */
+
+async function loadSlots() {
+
+    try {
+
+        const response =
+            await fetch("/api/parking-status");
+
+        const data =
+            await response.json();
+
+        bookedSlots =
+            data.booked_slots || [];
+
+        renderSlots();
+
+    } catch(error) {
+
+        renderSlots();
+
+    }
+}
+
+
+/* RENDER SLOTS */
+
+function renderSlots() {
+
+    const container =
+        document.getElementById("slots");
+
+    container.innerHTML = "";
+
+    validSlots.forEach(function(slot) {
+
+        const button =
+            document.createElement("button");
+
+        button.type = "button";
+
+        button.className = "slot";
+
+        button.innerText = slot;
+
+
+        if(bookedSlots.includes(slot)) {
+
+            button.classList.add("booked");
+
+            button.disabled = true;
+
+        } else {
+
+            button.onclick = function() {
+                selectSlot(slot);
+            };
+
+        }
+
+
+        if(
+            selectedSlot === slot &&
+            !bookedSlots.includes(slot)
+        ) {
+
+            button.classList.add("selected");
+
+        }
+
+        container.appendChild(button);
+
+    });
+
+    updateSummary();
+}
+
+
+/* SELECT SLOT */
+
+function selectSlot(slot) {
+
+    if(bookedSlots.includes(slot)) {
+        return;
+    }
+
+    selectedSlot = slot;
+
+    renderSlots();
+}
+
+
+/* UPDATE PRICE */
+
+function updateSummary() {
+
+    const duration =
+        parseInt(
+            document.getElementById("duration").value
+        );
+
+    /*
+       Same pricing logic used by backend
+       based on current occupancy.
+    */
+
+    let occupied =
+        bookedSlots.length;
+
+    let total =
+        validSlots.length;
+
+    let occupancy =
+        (occupied / total) * 100;
+
+    let hourlyPrice = 40;
+
+    if(occupancy >= 80) {
+        hourlyPrice = 80;
+    }
+    else if(occupancy >= 60) {
+        hourlyPrice = 60;
+    }
+
+    document.getElementById(
+        "summarySlot"
+    ).innerText =
+        selectedSlot || "Not selected";
+
+    document.getElementById(
+        "summaryDuration"
+    ).innerText =
+        duration +
+        (duration === 1 ? " hour" : " hours");
+
+    document.getElementById(
+        "rate"
+    ).innerText =
+        "₹" + hourlyPrice + " / hour";
+
+    document.getElementById(
+        "totalAmount"
+    ).innerText =
+        "₹" + (hourlyPrice * duration);
+}
+
+
+/* BOOKING */
+
+async function confirmBooking() {
+
+    const vehicleNumber =
+        document
+        .getElementById("vehicleNumber")
+        .value
+        .trim()
+        .toUpperCase();
+
+    const vehicleType =
+        document
+        .getElementById("vehicleType")
+        .value;
+
+    const duration =
+        parseInt(
+            document
+            .getElementById("duration")
+            .value
+        );
+
+    const message =
+        document.getElementById("message");
+
+    const button =
+        document.getElementById("bookButton");
+
+
+    message.className = "message";
+    message.innerText = "";
+
+
+    if(!vehicleNumber) {
+
+        showError(
+            "Please enter your vehicle number."
+        );
+
+        return;
+    }
+
+
+    if(!selectedSlot) {
+
+        showError(
+            "Please select an available parking slot."
+        );
+
+        return;
+    }
+
+
+    if(bookedSlots.includes(selectedSlot)) {
+
+        showError(
+            "This slot is no longer available."
+        );
+
+        await loadSlots();
+
+        return;
+    }
+
+
+    button.disabled = true;
+
+    button.innerText =
+        "Creating Booking...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/book",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                        "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        vehicle_number:
+                        vehicleNumber,
+
+                        vehicle_type:
+                        vehicleType,
+
+                        slot:
+                        selectedSlot,
+
+                        duration:
+                        duration
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            !data.success
+        ) {
+
+            showError(
+                data.message ||
+                "Booking could not be completed."
+            );
+
+            button.disabled = false;
+
+            button.innerText =
+                "Continue to Payment";
+
+            await loadSlots();
+
+            return;
+        }
+
+
+        showSuccess(
+            "Booking created. Opening payment..."
+        );
+
+
+        /*
+           IMPORTANT:
+           Send booking ID to the new
+           demo payment page.
+        */
+
+        setTimeout(function() {
+
+            window.location.href =
+                "/payment/" +
+                data.booking_id;
+
+        }, 600);
+
+
+    } catch(error) {
+
+        showError(
+            "Unable to connect to the parking server."
+        );
+
+        button.disabled = false;
+
+        button.innerText =
+            "Continue to Payment";
+    }
+}
+
+
+/* MESSAGES */
+
+function showError(text) {
+
+    const message =
+        document.getElementById("message");
+
+    message.className =
+        "message error";
+
+    message.innerText =
+        text;
+}
+
+
+function showSuccess(text) {
+
+    const message =
+        document.getElementById("message");
+
+    message.className =
+        "message success";
+
+    message.innerText =
+        text;
+}
+
+
+/* START */
+
+loadSlots();
+
+</script>
+
+</body>
+</html>
+

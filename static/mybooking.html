@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Booking | SmartPark</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    font-family:"Segoe UI",Arial,sans-serif;
+    background:#f5f7f3;
+    color:#17251d;
+}
+
+nav{
+    height:72px;
+    background:white;
+    border-bottom:1px solid #e1e6e1;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:800;
+    color:#174d35;
+}
+
+.logo span{color:#c77b17}
+
+.navlinks{
+    display:flex;
+    gap:28px;
+}
+
+.navlinks a{
+    text-decoration:none;
+    color:#59665e;
+    font-size:14px;
+    font-weight:600;
+}
+
+.navlinks a.active{color:#174d35}
+
+.location{
+    background:#edf3ee;
+    padding:9px 15px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.container{
+    width:90%;
+    max-width:850px;
+    margin:55px auto;
+}
+
+.header{text-align:center}
+
+.header small{
+    color:#c77b17;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.header h1{
+    font-size:36px;
+    margin-top:8px;
+}
+
+.header p{
+    color:#77827a;
+    margin-top:8px;
+}
+
+.card{
+    background:white;
+    border:1px solid #e0e5df;
+    border-radius:20px;
+    padding:30px;
+    margin-top:30px;
+}
+
+.search{
+    display:flex;
+    gap:10px;
+}
+
+.search input{
+    flex:1;
+    padding:14px;
+    border:1px solid #d6ded7;
+    border-radius:9px;
+    font-size:14px;
+    outline:none;
+}
+
+.search button{
+    padding:14px 22px;
+    border:none;
+    border-radius:9px;
+    background:#174d35;
+    color:white;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.hint{
+    color:#8a948d;
+    font-size:11px;
+    margin-top:10px;
+}
+
+.result{
+    display:none;
+    margin-top:25px;
+    border-top:1px solid #e3e8e3;
+    padding-top:25px;
+}
+
+.result.show{display:block}
+
+.status{
+    display:inline-block;
+    padding:7px 12px;
+    border-radius:20px;
+    background:#e3f3e8;
+    color:#286b45;
+    font-size:11px;
+    font-weight:800;
+}
+
+.reference{
+    font-size:25px;
+    font-weight:800;
+    color:#174d35;
+    margin-top:12px;
+}
+
+.details{
+    margin-top:20px;
+    background:#f5f8f5;
+    border-radius:12px;
+    padding:18px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    padding:9px 0;
+    border-bottom:1px solid #e1e7e1;
+    font-size:13px;
+}
+
+.row:last-child{border-bottom:none}
+
+.row span{color:#7a857d}
+
+.row strong{color:#26382d}
+
+.actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.action{
+    flex:1;
+    text-align:center;
+    text-decoration:none;
+    padding:13px;
+    border-radius:9px;
+    font-size:13px;
+    font-weight:800;
+}
+
+.primary{
+    background:#174d35;
+    color:white;
+}
+
+.secondary{
+    background:#edf3ee;
+    color:#174d35;
+}
+
+.message{
+    margin-top:20px;
+    padding:13px;
+    border-radius:9px;
+    background:#f8e4e4;
+    color:#9b3c3c;
+    font-size:12px;
+    text-align:center;
+    display:none;
+}
+
+@media(max-width:650px){
+    .navlinks{display:none}
+
+    .search{
+        flex-direction:column;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<div class="logo">
+Smart<span>Park</span>
+</div>
+
+<div class="navlinks">
+<a href="/">Home</a>
+<a href="/parking">Find Parking</a>
+<a href="/static/my_booking.html" class="active">My Booking</a>
+<a href="/owner">For Owners</a>
+</div>
+
+<div class="location">
+📍 PCMC
+</div>
+
+</nav>
+
+
+<div class="container">
+
+<div class="header">
+
+<small>YOUR PARKING</small>
+
+<h1>My Booking</h1>
+
+<p>
+Enter your booking reference to view your parking details.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<div class="search">
+
+<input
+id="reference"
+placeholder="e.g. SP-00013"
+>
+
+<button onclick="findBooking()">
+Find Booking
+</button>
+
+</div>
+
+<div class="hint">
+Your booking reference is shown on your confirmation receipt.
+</div>
+
+
+<div id="message" class="message"></div>
+
+
+<div id="result" class="result">
+
+<div class="status">
+BOOKING FOUND
+</div>
+
+<div
+class="reference"
+id="bookingReference"
+>
+SP-00000
+</div>
+
+<div class="details">
+
+<div class="row">
+<span>Vehicle</span>
+<strong id="vehicle">—</strong>
+</div>
+
+<div class="row">
+<span>Vehicle type</span>
+<strong id="vehicleType">—</strong>
+</div>
+
+<div class="row">
+<span>Parking slot</span>
+<strong id="slot">—</strong>
+</div>
+
+<div class="row">
+<span>Duration</span>
+<strong id="duration">—</strong>
+</div>
+
+<div class="row">
+<span>Amount</span>
+<strong id="amount">—</strong>
+</div>
+
+<div class="row">
+<span>Payment</span>
+<strong id="payment">—</strong>
+</div>
+
+<div class="row">
+<span>Booking time</span>
+<strong id="bookingTime">—</strong>
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<a
+id="confirmationLink"
+class="action primary"
+href="#"
+>
+View Confirmation
+</a>
+
+<a
+href="/parking"
+class="action secondary"
+>
+Find Another Parking
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+async function findBooking(){
+
+const input =
+document.getElementById("reference")
+.value
+.trim()
+.toUpperCase();
+
+const message =
+document.getElementById("message");
+
+const result =
+document.getElementById("result");
+
+message.style.display="none";
+result.classList.remove("show");
+
+
+if(!input){
+
+showMessage(
+"Please enter your booking reference."
+);
+
+return;
+
+}
+
+
+const match =
+input.match(/^SP-(\d+)$/);
+
+
+if(!match){
+
+showMessage(
+"Invalid reference. Example: SP-00013"
+);
+
+return;
+
+}
+
+
+const id =
+parseInt(match[1]);
+
+
+try{
+
+const response =
+await fetch("/api/bookings");
+
+const bookings =
+await response.json();
+
+
+const booking =
+bookings.find(
+b => b.id === id
+);
+
+
+if(!booking){
+
+showMessage(
+"Booking not found. Please check your reference."
+);
+
+return;
+
+}
+
+
+document.getElementById(
+"bookingReference"
+).innerText =
+"SP-" +
+String(booking.id).padStart(5,"0");
+
+
+document.getElementById(
+"vehicle"
+).innerText =
+booking.vehicle_number;
+
+
+document.getElementById(
+"vehicleType"
+).innerText =
+booking.vehicle_type;
+
+
+document.getElementById(
+"slot"
+).innerText =
+booking.slot;
+
+
+document.getElementById(
+"duration"
+).innerText =
+booking.duration +
+(booking.duration === 1
+? " hour"
+: " hours");
+
+
+document.getElementById(
+"amount"
+).innerText =
+"₹" + booking.amount;
+
+
+document.getElementById(
+"payment"
+).innerText =
+booking.payment_status || "PENDING";
+
+
+document.getElementById(
+"bookingTime"
+).innerText =
+booking.booking_time;
+
+
+document.getElementById(
+"confirmationLink"
+).href =
+"/confirmation/" +
+booking.id;
+
+
+result.classList.add("show");
+
+
+}catch(error){
+
+showMessage(
+"Unable to connect to SmartPark."
+);
+
+}
+
+}
+
+
+function showMessage(text){
+
+const message =
+document.getElementById("message");
+
+message.innerText=text;
+message.style.display="block";
+
+}
+
+
+document
+.getElementById("reference")
+.addEventListener(
+"keydown",
+function(event){
+
+if(event.key === "Enter"){
+findBooking();
+}
+
+}
+);
+
+</script>
+
+</body>
+</html>

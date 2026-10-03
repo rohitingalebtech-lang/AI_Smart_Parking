@@ -1,0 +1,503 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Demo Payment | SmartPark</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f7f3;
+    color: #17251d;
+}
+
+nav {
+    height: 72px;
+    background: white;
+    border-bottom: 1px solid #e1e6e1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 800;
+    color: #174d35;
+}
+
+.logo span {
+    color: #c77b17;
+}
+
+.location {
+    background: #edf3ee;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 45px auto;
+}
+
+.back {
+    color: #637068;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.header {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.header small {
+    color: #c77b17;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin-top: 8px;
+}
+
+.header p {
+    color: #77827a;
+    margin-top: 7px;
+}
+
+.payment-card {
+    background: white;
+    border: 1px solid #dfe5df;
+    border-radius: 20px;
+    max-width: 520px;
+    margin: 30px auto;
+    padding: 30px;
+    text-align: center;
+}
+
+.demo-badge {
+    display: inline-block;
+    background: #fff3df;
+    color: #99621e;
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.amount {
+    margin-top: 22px;
+}
+
+.amount span {
+    color: #78837b;
+    font-size: 12px;
+}
+
+.amount h2 {
+    font-size: 42px;
+    color: #173c2b;
+    margin-top: 3px;
+}
+
+.details {
+    margin-top: 22px;
+    padding: 18px;
+    background: #f5f8f5;
+    border-radius: 12px;
+    text-align: left;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 11px;
+    font-size: 13px;
+}
+
+.row:last-child {
+    margin-bottom: 0;
+}
+
+.row span {
+    color: #7a857d;
+}
+
+.row strong {
+    color: #26382d;
+}
+
+.qr {
+    width: 190px;
+    height: 190px;
+    margin: 25px auto 15px;
+    border: 8px solid white;
+    box-shadow: 0 5px 20px rgba(0,0,0,.12);
+}
+
+.qr img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.scan {
+    color: #69756d;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.pay-btn {
+    width: 100%;
+    margin-top: 23px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #174d35;
+    color: white;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.pay-btn:hover {
+    background: #103b27;
+}
+
+.pay-btn:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+}
+
+.message {
+    display: none;
+    margin-top: 14px;
+    padding: 11px;
+    border-radius: 9px;
+    font-size: 12px;
+}
+
+.message.error {
+    display: block;
+    background: #f8e4e4;
+    color: #9b3c3c;
+}
+
+.security {
+    margin-top: 18px;
+    color: #8a948d;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<nav>
+
+    <div class="logo">
+        Smart<span>Park</span>
+    </div>
+
+    <div class="location">
+         PCMC
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+
+    <a
+        class="back"
+        href="/booking"
+    >
+        â† Back to booking
+    </a>
+
+
+    <div class="header">
+
+        <small>
+            SECURE DEMO CHECKOUT
+        </small>
+
+        <h1>
+            Complete your payment.
+        </h1>
+
+        <p>
+            Scan the QR code to simulate your parking payment.
+        </p>
+
+    </div>
+
+
+    <div class="payment-card">
+
+
+        <div class="demo-badge">
+            DEMO PAYMENT
+        </div>
+
+
+        <div class="amount">
+
+            <span>
+                Amount payable
+            </span>
+
+            <h2>
+                ₹{{ booking[5] }}
+            </h2>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="row">
+
+                <span>
+                    Booking reference
+                </span>
+
+                <strong>
+                    SP-{{ "%05d"|format(booking[0]) }}
+                </strong>
+
+            </div>
+
+
+            <div class="row">
+
+                <span>
+                    Parking slot
+                </span>
+
+                <strong>
+                    {{ booking[3] }}
+                </strong>
+
+            </div>
+
+
+            <div class="row">
+
+                <span>
+                    Vehicle
+                </span>
+
+                <strong>
+                    {{ booking[1] }}
+                </strong>
+
+            </div>
+
+
+            <div class="row">
+
+                <span>
+                    Duration
+                </span>
+
+                <strong>
+                    {{ booking[4] }}
+                    {% if booking[4] == 1 %}
+                        hour
+                    {% else %}
+                        hours
+                    {% endif %}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="qr">
+
+            <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=SmartPark-Demo-Payment-SP-{{ booking[0] }}"
+                alt="Demo Payment QR"
+            >
+
+        </div>
+
+
+        <div class="scan">
+
+            Scan this QR code to view the
+            <b>demo payment</b> experience.
+
+            <br>
+
+            No real money is collected.
+
+        </div>
+
+
+        <button
+            class="pay-btn"
+            id="payButton"
+            onclick="completePayment()"
+        >
+            I've Completed Demo Payment
+        </button>
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <div class="security">
+
+            Demo Demo environment only.
+            Never enter your UPI PIN, OTP,
+            card PIN or banking credentials
+            into this application.
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+const bookingId =
+    {{ booking[0] }};
+
+
+async function completePayment() {
+
+    const button =
+        document.getElementById(
+            "payButton"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    button.disabled = true;
+
+    button.innerText =
+        "Processing...";
+
+
+    message.className =
+        "message";
+
+    message.innerText =
+        "";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/payment/" +
+                bookingId,
+                {
+                    method: "POST"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            !data.success
+        ) {
+
+            message.className =
+                "message error";
+
+            message.innerText =
+                data.message ||
+                "Payment could not be completed.";
+
+            button.disabled = false;
+
+            button.innerText =
+                "I've Completed Demo Payment";
+
+            return;
+
+        }
+
+
+        button.innerText =
+            "Payment Successful âœ“";
+
+
+        setTimeout(function() {
+
+            window.location.href =
+                "/confirmation/" +
+                bookingId;
+
+        }, 800);
+
+
+    }
+
+    catch(error) {
+
+        message.className =
+            "message error";
+
+        message.innerText =
+            "Unable to connect to the payment service.";
+
+        button.disabled = false;
+
+        button.innerText =
+            "I've Completed Demo Payment";
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Parking - Admin Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .stat h3 {
+            margin: 0 0 10px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .stat strong {
+            font-size: 30px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .prediction-box {
+            text-align: center;
+            padding: 25px;
+            border-radius: 15px;
+            background: #eef2ff;
+        }
+
+        .prediction {
+            font-size: 45px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .demand {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 20px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-weight: bold;
+        }
+
+        .system {
+            padding: 15px;
+            border-radius: 10px;
+            background: #dcfce7;
+            color: #166534;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        th {
+            background: #111827;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .refresh {
+            text-align: center;
+            margin-top: 15px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .nav {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background: #111827;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        @media(max-width:800px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media(max-width:500px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>👨‍💼 Smart Parking Admin Dashboard</h1>
+
+    <p>AI-Based Parking Management System</p>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- LIVE STATISTICS -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <h3>Total Slots</h3>
+
+            <strong id="totalSlots">50</strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            <h3>Available Slots</h3>
+
+            <strong id="availableSlots">50</strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            <h3>Occupied Slots</h3>
+
+            <strong id="occupiedSlots">0</strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            <h3>Total Bookings</h3>
+
+            <strong id="totalBookings">0</strong>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="dashboard-grid">
+
+
+        <!-- AI PREDICTION -->
+
+        <div class="card">
+
+            <h2>🤖 AI Occupancy Prediction</h2>
+
+            <div class="prediction-box">
+
+                <div>Predicted Parking Occupancy</div>
+
+                <div class="prediction" id="prediction">
+
+                    78%
+
+                </div>
+
+                <div class="demand" id="demand">
+
+                    HIGH DEMAND
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- SYSTEM STATUS -->
+
+        <div class="card">
+
+            <h2>⚙️ System Status</h2>
+
+            <br>
+
+            <div class="system">
+
+                🟢 SYSTEM ONLINE
+
+            </div>
+
+            <br>
+
+            <p>
+
+                <strong>Database:</strong> SQLite
+
+            </p>
+
+            <p>
+
+                <strong>AI Model:</strong> Random Forest
+
+            </p>
+
+            <p>
+
+                <strong>Recommendation:</strong> Active
+
+            </p>
+
+            <p>
+
+                <strong>Live Monitoring:</strong> Active
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- BOOKINGS -->
+
+    <div class="card" style="margin-top:20px;">
+
+        <h2>🎫 Recent Parking Bookings</h2>
+
+        <p>Live booking data from the parking database.</p>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Vehicle Number</th>
+
+                        <th>Vehicle Type</th>
+
+                        <th>Slot</th>
+
+                        <th>Duration</th>
+
+                        <th>Amount</th>
+
+                        <th>Booking Time</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="bookingTable">
+
+                    <tr>
+
+                        <td colspan="7">
+
+                            Loading bookings...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div class="refresh" id="refreshStatus">
+
+        Connecting to parking server...
+
+    </div>
+
+
+
+    <!-- NAVIGATION -->
+
+    <div class="nav">
+
+        <a href="/static/dashboard.html">
+
+            🏠 Dashboard
+
+        </a>
+
+
+        <a href="/static/live_parking.html">
+
+            🚦 Live Parking
+
+        </a>
+
+
+        <a href="/static/booking.html">
+
+            🎫 Booking
+
+        </a>
+
+
+        <a href="/static/ai_recommendation.html">
+
+            🤖 AI Recommendation
+
+        </a>
+
+
+        <a href="/">
+
+            📊 AI Prediction
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* ==========================================
+   LOAD LIVE PARKING STATUS
+========================================== */
+
+
+async function loadParkingStatus() {
+
+    try {
+
+        const response =
+            await fetch("/api/parking-status");
+
+        const data =
+            await response.json();
+
+
+        document.getElementById("totalSlots").textContent =
+            data.total;
+
+
+        document.getElementById("availableSlots").textContent =
+            data.available;
+
+
+        document.getElementById("occupiedSlots").textContent =
+            data.occupied;
+
+
+        document.getElementById("refreshStatus").textContent =
+
+            "🟢 Live data updated • Last update: " +
+
+            new Date().toLocaleTimeString();
+
+
+    }
+
+    catch (error) {
+
+        document.getElementById("refreshStatus").textContent =
+
+            "🔴 Unable to connect to parking server.";
+
+    }
+
+}
+
+
+
+/* ==========================================
+   LOAD BOOKINGS
+========================================== */
+
+
+async function loadBookings() {
+
+    try {
+
+        const response =
+            await fetch("/api/bookings");
+
+
+        const bookings =
+            await response.json();
+
+
+        document.getElementById("totalBookings").textContent =
+            bookings.length;
+
+
+        const table =
+            document.getElementById("bookingTable");
+
+
+        table.innerHTML = "";
+
+
+        if (bookings.length === 0) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td colspan="7">
+
+                        No bookings found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        bookings.forEach(booking => {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>${booking.id}</td>
+
+                <td>${booking.vehicle_number}</td>
+
+                <td>${booking.vehicle_type}</td>
+
+                <td><strong>${booking.slot}</strong></td>
+
+                <td>${booking.duration} hour(s)</td>
+
+                <td>₹${booking.amount}</td>
+
+                <td>${booking.booking_time}</td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+    }
+
+    catch (error) {
+
+        document.getElementById("bookingTable").innerHTML = `
+
+            <tr>
+
+                <td colspan="7">
+
+                    Unable to load booking data.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+
+/* ==========================================
+   AI OCCUPANCY PREDICTION
+========================================== */
+
+
+async function loadPrediction() {
+
+    try {
+
+        /*
+           Demo prediction based on
+           current time and day.
+        */
+
+        const now =
+            new Date();
+
+
+        const day =
+            now.getDay();
+
+
+        const hour =
+            now.getHours();
+
+
+        const formData =
+            new URLSearchParams();
+
+
+        formData.append("day", day);
+
+        formData.append("hour", hour);
+
+        formData.append("weather", 0);
+
+        formData.append("event", 0);
+
+        formData.append("vehicle_type", "Car");
+
+
+        const response =
+            await fetch("/", {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+
+                },
+
+                body: formData
+
+            });
+
+
+        const html =
+            await response.text();
+
+
+        const match =
+            html.match(
+                /Predicted Occupancy.*?([0-9]+(?:\.[0-9]+)?)%/is
+            );
+
+
+        if (match) {
+
+            const value =
+                parseFloat(match[1]);
+
+
+            document.getElementById("prediction").textContent =
+                value + "%";
+
+
+            const demand =
+                document.getElementById("demand");
+
+
+            if (value >= 80) {
+
+                demand.textContent =
+                    "HIGH DEMAND";
+
+            }
+
+            else if (value >= 60) {
+
+                demand.textContent =
+                    "MEDIUM DEMAND";
+
+            }
+
+            else {
+
+                demand.textContent =
+                    "LOW DEMAND";
+
+            }
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Prediction unavailable"
+        );
+
+    }
+
+}
+
+
+
+/* ==========================================
+   INITIAL LOAD
+========================================== */
+
+
+loadParkingStatus();
+
+loadBookings();
+
+loadPrediction();
+
+
+
+/* ==========================================
+   AUTO REFRESH
+========================================== */
+
+
+setInterval(() => {
+
+    loadParkingStatus();
+
+    loadBookings();
+
+    loadPrediction();
+
+}, 5000);
+
+
+</script>
+
+
+</body>
+
+</html>

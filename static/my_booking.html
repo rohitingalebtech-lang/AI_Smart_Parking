@@ -1,0 +1,350 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Booking - SmartPark</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7f6;
+    color: #17201d;
+}
+
+nav {
+    height: 70px;
+    background: white;
+    border-bottom: 1px solid #e5e9e7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #16845b;
+}
+
+nav a {
+    text-decoration: none;
+    color: #39433f;
+    margin-left: 28px;
+    font-size: 14px;
+}
+
+nav a:hover {
+    color: #16845b;
+}
+
+.container {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #69736f;
+    margin-bottom: 35px;
+}
+
+.search-box {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid #e1e7e4;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+input {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid #ccd5d1;
+    border-radius: 9px;
+    font-size: 15px;
+}
+
+button {
+    border: none;
+    background: #16845b;
+    color: white;
+    padding: 14px 24px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #116c4a;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e1e7e4;
+    border-radius: 16px;
+    padding: 28px;
+    display: none;
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 13px 0;
+    border-bottom: 1px solid #edf0ee;
+}
+
+.label {
+    color: #69736f;
+}
+
+.value {
+    font-weight: bold;
+}
+
+.status {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: #e8f6ef;
+    color: #16845b;
+    font-size: 13px;
+}
+
+.error {
+    display: none;
+    background: #fff0f0;
+    color: #b42318;
+    border: 1px solid #ffd2d2;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.confirm-btn {
+    display: inline-block;
+    margin-top: 22px;
+    text-decoration: none;
+    background: #17201d;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+}
+
+.empty {
+    text-align: center;
+    padding: 35px;
+    color: #69736f;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">Smart<span>Park</span></div>
+
+    <div>
+        <a href="/">Home</a>
+        <a href="/parking">Find Parking</a>
+        <a href="/my-booking">My Booking</a>
+        <a href="/owner">For Owners</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h1>My Booking</h1>
+    <p class="subtitle">
+        Enter your booking reference to view your parking details.
+    </p>
+
+    <div class="search-box">
+        <input
+            type="text"
+            id="bookingRef"
+            placeholder="Example: SP-00013"
+        >
+
+        <button onclick="findBooking()">
+            Find Booking
+        </button>
+    </div>
+
+    <div id="error" class="error"></div>
+
+    <div id="bookingCard" class="card">
+
+        <h2>Booking Details</h2>
+
+        <div class="row">
+            <span class="label">Booking Reference</span>
+            <span class="value" id="ref"></span>
+        </div>
+
+        <div class="row">
+            <span class="label">Vehicle Number</span>
+            <span class="value" id="vehicle"></span>
+        </div>
+
+        <div class="row">
+            <span class="label">Vehicle Type</span>
+            <span class="value" id="vehicleType"></span>
+        </div>
+
+        <div class="row">
+            <span class="label">Parking Slot</span>
+            <span class="value" id="slot"></span>
+        </div>
+
+        <div class="row">
+            <span class="label">Duration</span>
+            <span class="value" id="duration"></span>
+        </div>
+
+        <div class="row">
+            <span class="label">Amount</span>
+            <span class="value" id="amount"></span>
+        </div>
+
+        <div class="row">
+            <span class="label">Payment</span>
+            <span class="value status" id="payment"></span>
+        </div>
+
+        <div class="row">
+            <span class="label">Booking Time</span>
+            <span class="value" id="bookingTime"></span>
+        </div>
+
+        <a id="confirmationLink" class="confirm-btn">
+            View Confirmation
+        </a>
+
+    </div>
+
+    <div id="empty" class="empty">
+        No booking selected yet.
+    </div>
+
+</div>
+
+<script>
+
+async function findBooking() {
+
+    const input = document.getElementById("bookingRef");
+    const error = document.getElementById("error");
+    const card = document.getElementById("bookingCard");
+    const empty = document.getElementById("empty");
+
+    const reference = input.value.trim().toUpperCase();
+
+    error.style.display = "none";
+    card.style.display = "none";
+    empty.style.display = "none";
+
+    if (!reference) {
+        error.textContent = "Please enter your booking reference.";
+        error.style.display = "block";
+        empty.style.display = "block";
+        return;
+    }
+
+    const match = reference.match(/^SP-(\d+)$/);
+
+    if (!match) {
+        error.textContent = "Invalid booking reference. Example: SP-00013";
+        error.style.display = "block";
+        empty.style.display = "block";
+        return;
+    }
+
+    const bookingId = parseInt(match[1]);
+
+    try {
+
+        const response = await fetch("/api/bookings");
+
+        if (!response.ok) {
+            throw new Error("Unable to connect to booking service.");
+        }
+
+        const bookings = await response.json();
+
+        let booking = null;
+
+        for (const item of bookings) {
+
+            const id = item.id ?? item[0];
+
+            if (Number(id) === bookingId) {
+                booking = item;
+                break;
+            }
+        }
+
+        if (!booking) {
+            error.textContent = "Booking not found. Please check your reference.";
+            error.style.display = "block";
+            empty.style.display = "block";
+            return;
+        }
+
+        const vehicle = booking.vehicle_number ?? booking[1] ?? "";
+        const vehicleType = booking.vehicle_type ?? booking[2] ?? "";
+        const slot = booking.slot ?? booking[3] ?? "";
+        const duration = booking.duration ?? booking[4] ?? "";
+        const amount = booking.amount ?? booking[5] ?? "";
+        const bookingTime = booking.booking_time ?? booking[6] ?? "";
+        const payment = booking.payment_status ?? booking[7] ?? "PENDING";
+
+        document.getElementById("ref").textContent =
+            "SP-" + String(bookingId).padStart(5, "0");
+
+        document.getElementById("vehicle").textContent = vehicle;
+        document.getElementById("vehicleType").textContent = vehicleType;
+        document.getElementById("slot").textContent = slot;
+        document.getElementById("duration").textContent = duration + " hour(s)";
+        document.getElementById("amount").textContent = "Rs. " + amount;
+        document.getElementById("payment").textContent = payment;
+        document.getElementById("bookingTime").textContent = bookingTime;
+
+        document.getElementById("confirmationLink").href =
+            "/confirmation/" + bookingId;
+
+        card.style.display = "block";
+
+    } catch (err) {
+
+        error.textContent = err.message;
+        error.style.display = "block";
+        empty.style.display = "block";
+    }
+}
+
+</script>
+
+</body>
+</html>
+

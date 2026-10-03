@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Parking Booking</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .slots {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .slot {
+            padding: 15px 5px;
+            background: #22c55e;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .slot.selected {
+            background: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #dcfce7;
+            border-radius: 10px;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #166534;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚗 Smart Parking Booking</h1>
+    <p>Reserve your parking slot</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>📝 Booking Details</h2>
+
+        <label>Vehicle Number</label>
+        <input id="vehicleNumber" type="text" placeholder="e.g. MH12AB1234">
+
+        <label>Vehicle Type</label>
+        <select id="vehicleType">
+            <option value="Car">Car</option>
+            <option value="Bike">Bike</option>
+            <option value="SUV">SUV</option>
+        </select>
+
+        <label>Parking Duration</label>
+        <select id="duration" onchange="calculatePrice()">
+            <option value="1">1 Hour</option>
+            <option value="2">2 Hours</option>
+            <option value="3">3 Hours</option>
+            <option value="4">4 Hours</option>
+        </select>
+
+        <h3>🅿️ Select Available Slot</h3>
+
+        <div class="slots">
+            <div class="slot" onclick="selectSlot(this)">A1</div>
+            <div class="slot" onclick="selectSlot(this)">A2</div>
+            <div class="slot" onclick="selectSlot(this)">A3</div>
+            <div class="slot" onclick="selectSlot(this)">A4</div>
+            <div class="slot" onclick="selectSlot(this)">A5</div>
+
+            <div class="slot" onclick="selectSlot(this)">B1</div>
+            <div class="slot" onclick="selectSlot(this)">B2</div>
+            <div class="slot" onclick="selectSlot(this)">B3</div>
+            <div class="slot" onclick="selectSlot(this)">B4</div>
+            <div class="slot" onclick="selectSlot(this)">B5</div>
+
+            <div class="slot" onclick="selectSlot(this)">C1</div>
+            <div class="slot" onclick="selectSlot(this)">C2</div>
+            <div class="slot" onclick="selectSlot(this)">C3</div>
+            <div class="slot" onclick="selectSlot(this)">C4</div>
+            <div class="slot" onclick="selectSlot(this)">C5</div>
+        </div>
+
+        <p id="selectedText">No slot selected</p>
+
+        <h3>
+            Estimated Cost:
+            <span id="price">₹40</span>
+        </h3>
+
+        <button onclick="confirmBooking()">
+            ✅ Confirm Booking
+        </button>
+
+        <div class="result" id="result">
+            <h2>🎉 Booking Confirmed!</h2>
+            <p id="bookingDetails"></p>
+            <p class="price" id="finalPrice"></p>
+            <p>✅ Booking has been saved to the parking database.</p>
+        </div>
+
+    </div>
+
+    <a class="back" href="/static/dashboard.html">
+        ← Back to Main Dashboard
+    </a>
+
+</div>
+
+<script>
+
+let selectedSlot = null;
+
+function selectSlot(element) {
+
+    document.querySelectorAll(".slot").forEach(slot => {
+        slot.classList.remove("selected");
+    });
+
+    element.classList.add("selected");
+
+    selectedSlot = element.innerText;
+
+    document.getElementById("selectedText").innerText =
+        "Selected Slot: " + selectedSlot;
+}
+
+
+function calculatePrice() {
+
+    let duration = document.getElementById("duration").value;
+
+    document.getElementById("price").innerText =
+        "₹" + (duration * 40);
+}
+
+
+async function confirmBooking() {
+
+    let vehicleNumber =
+        document.getElementById("vehicleNumber").value.trim();
+
+    let vehicleType =
+        document.getElementById("vehicleType").value;
+
+    let duration =
+        document.getElementById("duration").value;
+
+    if (vehicleNumber === "") {
+        alert("Please enter vehicle number.");
+        return;
+    }
+
+    if (selectedSlot === null) {
+        alert("Please select a parking slot.");
+        return;
+    }
+
+    let amount = duration * 40;
+
+    try {
+
+        let response = await fetch("/api/book", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                vehicle_number: vehicleNumber,
+                vehicle_type: vehicleType,
+                slot: selectedSlot,
+                duration: duration
+            })
+        });
+
+        let data = await response.json();
+
+        if (data.success) {
+
+            document.getElementById("bookingDetails").innerHTML =
+                "<b>Vehicle:</b> " + vehicleNumber +
+                "<br><b>Type:</b> " + vehicleType +
+                "<br><b>Slot:</b> " + selectedSlot +
+                "<br><b>Duration:</b> " + duration + " hour(s)";
+
+            document.getElementById("finalPrice").innerText =
+                "₹" + amount;
+
+            document.getElementById("result").style.display =
+                "block";
+
+            alert("🎉 Booking saved successfully!");
+
+        } else {
+
+            alert("Booking failed.");
+
+        }
+
+    } catch (error) {
+
+        alert("Server connection error. Make sure Flask is running.");
+
+        console.log(error);
+    }
+}
+
+</script>
+
+</body>
+</html>

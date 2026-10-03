@@ -1,0 +1,1267 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Find Parking | SmartPark</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7f6;
+            color: #17201c;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e3e8e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            color: #173c2d;
+        }
+
+        .logo span {
+            color: #2f8f62;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .nav-links a {
+            color: #53615b;
+        }
+
+        .nav-links a:hover,
+        .nav-links .active {
+            color: #21734d;
+        }
+
+        .owner-link {
+            border: 1px solid #d5ded9;
+            padding: 9px 16px;
+            border-radius: 9px;
+        }
+
+        .container {
+            width: 86%;
+            max-width: 1180px;
+            margin: auto;
+        }
+
+        .hero {
+            padding: 52px 0 32px;
+        }
+
+        .eyebrow {
+            color: #278255;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 40px;
+            line-height: 1.15;
+            color: #17201c;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: #66736d;
+            font-size: 17px;
+            max-width: 650px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 0.65fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e0e6e2;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(30, 50, 40, 0.05);
+        }
+
+        .card-title {
+            font-size: 21px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .card-subtitle {
+            color: #718078;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .parking-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .parking-option {
+            border: 1px solid #dce4df;
+            border-radius: 12px;
+            padding: 17px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .parking-option:hover {
+            border-color: #65a985;
+            box-shadow: 0 5px 15px rgba(42, 112, 77, 0.08);
+        }
+
+        .parking-name {
+            font-weight: 800;
+            font-size: 17px;
+        }
+
+        .parking-meta {
+            color: #748078;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .availability {
+            font-weight: 800;
+            color: #278255;
+            font-size: 14px;
+        }
+
+        .book-btn {
+            display: inline-block;
+            background: #23764e;
+            color: white;
+            border: none;
+            padding: 10px 17px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 9px;
+        }
+
+        .book-btn:hover {
+            background: #195f3e;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .stat {
+            background: #f4f8f5;
+            border-radius: 11px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: #236d4a;
+        }
+
+        .stat-label {
+            color: #748078;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .ai-card {
+            border-top: 4px solid #2c865a;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: #e7f4ed;
+            color: #24764e;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 13px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #45524c;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d5ded9;
+            border-radius: 8px;
+            background: #ffffff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #4b9a70;
+        }
+
+        .ai-btn {
+            width: 100%;
+            border: none;
+            background: #183f30;
+            color: white;
+            padding: 12px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .ai-btn:hover {
+            background: #102f23;
+        }
+
+        .ai-result {
+            display: none;
+            margin-top: 16px;
+            padding: 15px;
+            background: #f0f7f3;
+            border: 1px solid #cfe2d7;
+            border-radius: 10px;
+        }
+
+        .result-title {
+            font-weight: 800;
+            color: #1e6846;
+            margin-bottom: 4px;
+        }
+
+        .result-value {
+            font-size: 25px;
+            font-weight: 900;
+            color: #173c2d;
+        }
+
+        .result-text {
+            color: #65736b;
+            font-size: 13px;
+        }
+
+        .slots-card {
+            margin-bottom: 45px;
+        }
+
+        .slots-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .live {
+            color: #278255;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .slots {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .slot {
+            border: 1px solid #cfdad4;
+            border-radius: 10px;
+            padding: 15px 8px;
+            text-align: center;
+            background: #f5faf7;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .slot:hover {
+            transform: translateY(-2px);
+            border-color: #36885e;
+        }
+
+        .slot-number {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .slot-status {
+            font-size: 11px;
+            margin-top: 3px;
+            color: #32845b;
+            font-weight: 700;
+        }
+
+        .slot.booked {
+            background: #f7eeee;
+            border-color: #e2caca;
+            cursor: not-allowed;
+            opacity: 0.65;
+        }
+
+        .slot.booked .slot-status {
+            color: #a34d4d;
+        }
+
+        .selected {
+            border: 2px solid #23764e !important;
+            background: #e5f3eb !important;
+        }
+
+        .selected .slot-status {
+            color: #23764e;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 28px;
+            color: #7b8781;
+            font-size: 13px;
+        }
+
+        @media (max-width: 850px) {
+
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slots {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            .nav-links a:nth-child(2) {
+                display: none;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .parking-option {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .slots {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a href="/" class="logo">
+        Smart<span>Park</span>
+    </a>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/parking" class="active">Find Parking</a>
+        <a href="/my-booking">My Booking</a>
+        <a href="/owner" class="owner-link">For Owners</a>
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+    <section class="hero">
+
+        <div class="eyebrow">
+            Intelligent Parking
+        </div>
+
+        <h1>
+            Find a parking space<br>
+            without the search.
+        </h1>
+
+        <p>
+            Check live availability, use AI to understand parking demand,
+            and get an intelligent slot recommendation before booking.
+        </p>
+
+    </section>
+
+
+    <section class="main-grid">
+
+
+        <!-- PARKING -->
+        <div class="card">
+
+            <div class="card-title">
+                Nearby Parking
+            </div>
+
+            <div class="card-subtitle">
+                SmartPark stations around your selected area
+            </div>
+
+
+            <div class="parking-list">
+
+                <div class="parking-option">
+
+                    <div>
+                        <div class="parking-name">
+                            SmartPark Station A
+                        </div>
+
+                        <div class="parking-meta">
+                            PCMC Area • 0.8 km • ₹40/hour
+                        </div>
+
+                        <div class="availability" id="stationA">
+                            Checking availability...
+                        </div>
+                    </div>
+
+                    <a
+                        href="/booking?parking=SmartPark%20Station%20A"
+                        class="book-btn"
+                    >
+                        View & Book
+                    </a>
+
+                </div>
+
+
+                <div class="parking-option">
+
+                    <div>
+                        <div class="parking-name">
+                            SmartPark Station B
+                        </div>
+
+                        <div class="parking-meta">
+                            PCMC Area • 1.4 km • ₹40/hour
+                        </div>
+
+                        <div class="availability">
+                            Available parking
+                        </div>
+                    </div>
+
+                    <a
+                        href="/booking?parking=SmartPark%20Station%20B"
+                        class="book-btn"
+                    >
+                        View & Book
+                    </a>
+
+                </div>
+
+
+                <div class="parking-option">
+
+                    <div>
+                        <div class="parking-name">
+                            SmartPark Station C
+                        </div>
+
+                        <div class="parking-meta">
+                            PCMC Area • 2.1 km • ₹40/hour
+                        </div>
+
+                        <div class="availability">
+                            Available parking
+                        </div>
+                    </div>
+
+                    <a
+                        href="/booking?parking=SmartPark%20Station%20C"
+                        class="book-btn"
+                    >
+                        View & Book
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat">
+                    <div
+                        class="stat-number"
+                        id="totalSlots"
+                    >
+                        -
+                    </div>
+
+                    <div class="stat-label">
+                        Total Spaces
+                    </div>
+                </div>
+
+
+                <div class="stat">
+                    <div
+                        class="stat-number"
+                        id="availableSlots"
+                    >
+                        -
+                    </div>
+
+                    <div class="stat-label">
+                        Available
+                    </div>
+                </div>
+
+
+                <div class="stat">
+                    <div
+                        class="stat-number"
+                        id="occupiedSlots"
+                    >
+                        -
+                    </div>
+
+                    <div class="stat-label">
+                        Occupied
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AI -->
+        <div class="card ai-card">
+
+            <div class="ai-badge">
+                AI PARKING INTELLIGENCE
+            </div>
+
+            <div class="card-title">
+                Predict parking demand
+            </div>
+
+            <div class="card-subtitle">
+                See expected occupancy and get an AI-recommended slot.
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Day
+                </label>
+
+                <select id="aiDay">
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Expected arrival time
+                </label>
+
+                <select id="aiHour">
+
+                    <option value="8">8:00 AM</option>
+                    <option value="9" selected>9:00 AM</option>
+                    <option value="10">10:00 AM</option>
+                    <option value="11">11:00 AM</option>
+                    <option value="12">12:00 PM</option>
+                    <option value="13">1:00 PM</option>
+                    <option value="14">2:00 PM</option>
+                    <option value="15">3:00 PM</option>
+                    <option value="16">4:00 PM</option>
+                    <option value="17">5:00 PM</option>
+                    <option value="18">6:00 PM</option>
+                    <option value="19">7:00 PM</option>
+                    <option value="20">8:00 PM</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Weather
+                </label>
+
+                <select id="aiWeather">
+
+                    <option value="0">
+                        Normal
+                    </option>
+
+                    <option value="1">
+                        Rain
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Local event
+                </label>
+
+                <select id="aiEvent">
+
+                    <option value="0">
+                        No major event
+                    </option>
+
+                    <option value="1">
+                        Event / high traffic
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Vehicle
+                </label>
+
+                <select id="vehicleType">
+
+                    <option value="Car">
+                        Car
+                    </option>
+
+                    <option value="Bike">
+                        Bike
+                    </option>
+
+                    <option value="SUV">
+                        SUV
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="ai-btn"
+                onclick="runAI()"
+            >
+                Run AI Analysis
+            </button>
+
+
+            <div
+                class="ai-result"
+                id="aiResult"
+            >
+
+                <div class="result-title">
+                    AI prediction
+                </div>
+
+                <div
+                    class="result-value"
+                    id="predictionValue"
+                >
+                    --
+                </div>
+
+                <div
+                    class="result-text"
+                    id="predictionText"
+                >
+                </div>
+
+                <br>
+
+                <div class="result-title">
+                    Recommended slot
+                </div>
+
+                <div
+                    class="result-value"
+                    id="recommendValue"
+                >
+                    --
+                </div>
+
+                <div
+                    class="result-text"
+                    id="recommendText"
+                >
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LIVE SLOTS -->
+
+    <section class="card slots-card">
+
+        <div class="slots-header">
+
+            <div>
+                <div class="card-title">
+                    Live Parking Spaces
+                </div>
+
+                <div class="card-subtitle">
+                    Select an available space to continue booking.
+                </div>
+            </div>
+
+            <div class="live">
+                ● LIVE
+            </div>
+
+        </div>
+
+
+        <div
+            class="slots"
+            id="slotsContainer"
+        >
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+    SmartPark • AI-Based Smart Parking Management System
+</footer>
+
+
+<script>
+
+    let recommendedSlot = null;
+
+
+    // ==============================================
+    // LIVE PARKING
+    // ==============================================
+
+    async function loadParkingStatus() {
+
+        try {
+
+            const response =
+                await fetch("/api/parking-status");
+
+            const data =
+                await response.json();
+
+
+            document.getElementById(
+                "totalSlots"
+            ).textContent =
+                data.total;
+
+
+            document.getElementById(
+                "availableSlots"
+            ).textContent =
+                data.available;
+
+
+            document.getElementById(
+                "occupiedSlots"
+            ).textContent =
+                data.occupied;
+
+
+            const container =
+                document.getElementById(
+                    "slotsContainer"
+                );
+
+
+            container.innerHTML = "";
+
+
+            const booked =
+                data.booked_slots || [];
+
+
+            for (
+                let row = 0;
+                row < 3;
+                row++
+            ) {
+
+                const letter =
+                    String.fromCharCode(
+                        65 + row
+                    );
+
+
+                for (
+                    let number = 1;
+                    number <= 5;
+                    number++
+                ) {
+
+                    const slotName =
+                        letter + number;
+
+
+                    const isBooked =
+                        booked.includes(
+                            slotName
+                        );
+
+
+                    const slot =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    slot.className =
+                        "slot" +
+                        (
+                            isBooked
+                                ? " booked"
+                                : ""
+                        );
+
+
+                    slot.innerHTML = `
+
+                        <div class="slot-number">
+                            ${slotName}
+                        </div>
+
+                        <div class="slot-status">
+                            ${
+                                isBooked
+                                    ? "Occupied"
+                                    : "Available"
+                            }
+                        </div>
+
+                    `;
+
+
+                    if (!isBooked) {
+
+                        slot.onclick = function() {
+
+                            document
+                                .querySelectorAll(
+                                    ".slot"
+                                )
+                                .forEach(
+                                    s =>
+                                    s.classList
+                                    .remove(
+                                        "selected"
+                                    )
+                                );
+
+
+                            slot.classList.add(
+                                "selected"
+                            );
+
+
+                            window.location.href =
+                                "/booking?slot=" +
+                                encodeURIComponent(
+                                    slotName
+                                );
+
+                        };
+
+                    }
+
+
+                    container.appendChild(
+                        slot
+                    );
+
+                }
+
+            }
+
+
+            document.getElementById(
+                "stationA"
+            ).textContent =
+                data.available +
+                " spaces currently available";
+
+
+        } catch (error) {
+
+            console.error(
+                "Parking status error:",
+                error
+            );
+
+            document.getElementById(
+                "stationA"
+            ).textContent =
+                "Live status unavailable";
+
+        }
+
+    }
+
+
+    // ==============================================
+    // AI
+    // ==============================================
+
+    async function runAI() {
+
+        const day =
+            document.getElementById(
+                "aiDay"
+            ).value;
+
+
+        const hour =
+            document.getElementById(
+                "aiHour"
+            ).value;
+
+
+        const weather =
+            document.getElementById(
+                "aiWeather"
+            ).value;
+
+
+        const event =
+            document.getElementById(
+                "aiEvent"
+            ).value;
+
+
+        const vehicle =
+            document.getElementById(
+                "vehicleType"
+            ).value;
+
+
+        const result =
+            document.getElementById(
+                "aiResult"
+            );
+
+
+        result.style.display =
+            "block";
+
+
+        document.getElementById(
+            "predictionValue"
+        ).textContent =
+            "Analysing...";
+
+
+        document.getElementById(
+            "recommendValue"
+        ).textContent =
+            "Analysing...";
+
+
+        try {
+
+            // AI PREDICTION
+
+            const predictionResponse =
+                await fetch(
+                    "/api/ai-predict",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            day:
+                                Number(day),
+
+                            hour:
+                                Number(hour),
+
+                            weather:
+                                Number(weather),
+
+                            event:
+                                Number(event)
+
+                        })
+                    }
+                );
+
+
+            const predictionData =
+                await predictionResponse.json();
+
+
+            if (
+                predictionData.success
+            ) {
+
+                const prediction =
+                    Math.round(
+                        predictionData.prediction
+                    );
+
+
+                document.getElementById(
+                    "predictionValue"
+                ).textContent =
+                    prediction + "%";
+
+
+                let message =
+                    "Moderate expected parking demand.";
+
+
+                if (prediction >= 80) {
+
+                    message =
+                        "High demand expected. Booking early is recommended.";
+
+                }
+                else if (prediction >= 60) {
+
+                    message =
+                        "Busy period expected. Consider reserving a slot.";
+
+                }
+                else {
+
+                    message =
+                        "Lower demand expected. Parking should be easier to find.";
+
+                }
+
+
+                document.getElementById(
+                    "predictionText"
+                ).textContent =
+                    message;
+
+            }
+
+
+            // AI RECOMMENDATION
+
+            const recommendResponse =
+                await fetch(
+                    "/api/ai-recommend",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            vehicle_type:
+                                vehicle,
+
+                            weather:
+                                Number(weather),
+
+                            event:
+                                Number(event)
+
+                        })
+                    }
+                );
+
+
+            const recommendData =
+                await recommendResponse.json();
+
+
+            if (
+                recommendData.success
+            ) {
+
+                recommendedSlot =
+                    recommendData.slot;
+
+
+                document.getElementById(
+                    "recommendValue"
+                ).textContent =
+                    recommendedSlot;
+
+
+                document.getElementById(
+                    "recommendText"
+                ).textContent =
+                    "AI selected this available slot based on current parking conditions.";
+
+            }
+            else {
+
+                document.getElementById(
+                    "recommendValue"
+                ).textContent =
+                    "No slot";
+
+
+                document.getElementById(
+                    "recommendText"
+                ).textContent =
+                    recommendData.message ||
+                    "No suitable slot is available.";
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "AI error:",
+                error
+            );
+
+
+            document.getElementById(
+                "predictionValue"
+            ).textContent =
+                "Error";
+
+
+            document.getElementById(
+                "recommendValue"
+            ).textContent =
+                "Error";
+
+
+            document.getElementById(
+                "predictionText"
+            ).textContent =
+                "AI service could not be reached.";
+
+        }
+
+    }
+
+
+    // ==============================================
+    // START
+    // ==============================================
+
+    loadParkingStatus();
+
+    setInterval(
+        loadParkingStatus,
+        5000
+    );
+
+</script>
+
+</body>
+</html>

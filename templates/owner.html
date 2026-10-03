@@ -1,0 +1,1047 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SmartPark | Owner & AI Intelligence</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:"Segoe UI",Arial,sans-serif;
+    background:#f4f7f4;
+    color:#17251d;
+}
+
+nav{
+    height:72px;
+    background:white;
+    border-bottom:1px solid #e1e6e1;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:800;
+    color:#174d35;
+}
+
+.logo span{
+    color:#c77b17;
+}
+
+.navlinks{
+    display:flex;
+    gap:27px;
+}
+
+.navlinks a{
+    text-decoration:none;
+    color:#59665e;
+    font-size:14px;
+    font-weight:600;
+}
+
+.navlinks a.active{
+    color:#174d35;
+}
+
+.location{
+    background:#edf3ee;
+    padding:9px 15px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:38px auto 70px;
+}
+
+.hero{
+    background:#173c2b;
+    color:white;
+    border-radius:22px;
+    padding:32px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+}
+
+.hero small{
+    color:#e1a44c;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1.2px;
+}
+
+.hero h1{
+    font-size:36px;
+    margin-top:8px;
+}
+
+.hero p{
+    color:#bfd0c5;
+    margin-top:8px;
+    max-width:650px;
+    line-height:1.6;
+}
+
+.ai-badge{
+    background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:15px;
+    padding:20px;
+    min-width:190px;
+}
+
+.ai-badge strong{
+    display:block;
+    font-size:27px;
+    margin-top:5px;
+}
+
+.ai-badge span{
+    color:#bfd0c5;
+    font-size:12px;
+}
+
+.section-title{
+    margin:35px 0 17px;
+}
+
+.section-title h2{
+    font-size:22px;
+}
+
+.section-title p{
+    color:#78847c;
+    font-size:13px;
+    margin-top:4px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:17px;
+}
+
+.stat{
+    background:white;
+    border:1px solid #e0e6e0;
+    border-radius:16px;
+    padding:22px;
+}
+
+.stat-label{
+    color:#7a857d;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.5px;
+}
+
+.stat-value{
+    font-size:30px;
+    font-weight:800;
+    margin-top:7px;
+    color:#173c2b;
+}
+
+.stat-note{
+    color:#89938c;
+    font-size:11px;
+    margin-top:4px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border:1px solid #e0e6e0;
+    border-radius:18px;
+    padding:24px;
+}
+
+.card h3{
+    font-size:18px;
+}
+
+.card-sub{
+    color:#7c877f;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.ai-form{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.field label{
+    display:block;
+    color:#59665e;
+    font-size:11px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.field select{
+    width:100%;
+    padding:11px;
+    border:1px solid #d6ded7;
+    border-radius:9px;
+    background:white;
+}
+
+.ai-button{
+    grid-column:1/-1;
+    padding:13px;
+    border:none;
+    border-radius:9px;
+    background:#174d35;
+    color:white;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.ai-result{
+    display:none;
+    margin-top:18px;
+    padding:18px;
+    background:#eef6f0;
+    border-radius:12px;
+}
+
+.ai-result.show{
+    display:block;
+}
+
+.ai-result .big{
+    font-size:27px;
+    font-weight:800;
+    color:#174d35;
+}
+
+.ai-result p{
+    margin-top:5px;
+    font-size:12px;
+    color:#647168;
+}
+
+.demand{
+    margin-top:18px;
+    padding:17px;
+    border-radius:12px;
+    background:#f6f8f6;
+}
+
+.demand-title{
+    font-size:11px;
+    color:#7a857d;
+    font-weight:700;
+}
+
+.demand-value{
+    font-size:24px;
+    font-weight:800;
+    margin-top:5px;
+    color:#174d35;
+}
+
+.slots{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:9px;
+}
+
+.slot{
+    text-align:center;
+    padding:12px 5px;
+    border-radius:9px;
+    font-size:12px;
+    font-weight:800;
+}
+
+.available{
+    background:#e5f2e9;
+    color:#287047;
+}
+
+.occupied{
+    background:#f5dddd;
+    color:#a33d3d;
+}
+
+.booking-card{
+    margin-top:20px;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:18px;
+    font-size:12px;
+}
+
+th{
+    background:#17251d;
+    color:white;
+    text-align:left;
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #e5e9e5;
+}
+
+.empty{
+    text-align:center;
+    color:#7d887f;
+    padding:20px;
+}
+
+.refresh{
+    margin-top:18px;
+    color:#78847c;
+    font-size:11px;
+    text-align:right;
+}
+
+@media(max-width:850px){
+    .navlinks{
+        display:none;
+    }
+
+    .hero{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:550px){
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .ai-form{
+        grid-template-columns:1fr;
+    }
+
+    .ai-button{
+        grid-column:auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<div class="logo">
+Smart<span>Park</span>
+</div>
+
+<div class="navlinks">
+<a href="/">Home</a>
+<a href="/parking">Find Parking</a>
+<a href="/my-booking">My Booking</a>
+<a href="/owner" class="active">For Owners</a>
+</div>
+
+<div class="location">
+ PCMC
+</div>
+
+</nav>
+
+
+<div class="container">
+
+<section class="hero">
+
+<div>
+
+<small>AI PARKING INTELLIGENCE</small>
+
+<h1>SmartPark Owner Center</h1>
+
+<p>
+Manage parking operations with live occupancy,
+AI demand prediction, intelligent slot recommendation
+and real-time booking information.
+</p>
+
+</div>
+
+<div class="ai-badge">
+
+<span>AI SYSTEM</span>
+
+<strong>ACTIVE</strong>
+
+<span>Prediction · Recommendation · Pricing</span>
+
+</div>
+
+</section>
+
+
+<div class="section-title">
+
+<h2>Live parking overview</h2>
+
+<p>Real-time information from the SmartPark database.</p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<div class="stat-label">TOTAL SPACES</div>
+<div class="stat-value" id="total">15</div>
+<div class="stat-note">Parking capacity</div>
+</div>
+
+<div class="stat">
+<div class="stat-label">AVAILABLE</div>
+<div class="stat-value" id="available">-</div>
+<div class="stat-note">Spaces ready to book</div>
+</div>
+
+<div class="stat">
+<div class="stat-label">OCCUPIED</div>
+<div class="stat-value" id="occupied">-</div>
+<div class="stat-note">Currently booked</div>
+</div>
+
+<div class="stat">
+<div class="stat-label">TOTAL BOOKINGS</div>
+<div class="stat-value" id="bookingsCount">-</div>
+<div class="stat-note">Recorded bookings</div>
+</div>
+
+</div>
+
+
+<div class="section-title">
+
+<h2>AI intelligence</h2>
+
+<p>Use machine learning to understand future parking demand.</p>
+
+</div>
+
+
+<div class="grid">
+
+
+<div class="card">
+
+<h3>AI Occupancy Prediction AI Occupancy Prediction</h3>
+
+<div class="card-sub">
+Predict expected parking occupancy using day, time,
+weather and events.
+</div>
+
+
+<div class="ai-form">
+
+<div class="field">
+
+<label>DAY</label>
+
+<select id="day">
+
+<option value="0">Monday</option>
+<option value="1">Tuesday</option>
+<option value="2">Wednesday</option>
+<option value="3">Thursday</option>
+<option value="4">Friday</option>
+<option value="5">Saturday</option>
+<option value="6">Sunday</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>TIME</label>
+
+<select id="hour">
+
+<option value="9">09:00 AM</option>
+<option value="13">01:00 PM</option>
+<option value="17">05:00 PM</option>
+<option value="19">07:00 PM</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>WEATHER</label>
+
+<select id="weather">
+
+<option value="0">Normal</option>
+<option value="1">Rainy</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>EVENT</label>
+
+<select id="event">
+
+<option value="0">No Event</option>
+<option value="1">Major Event</option>
+
+</select>
+
+</div>
+
+
+<button class="ai-button" onclick="runPrediction()">
+Run AI Prediction
+</button>
+
+</div>
+
+
+<div id="aiResult" class="ai-result">
+
+<div class="big">
+<span id="prediction">-</span>% occupancy
+</div>
+
+<p>
+Predicted parking occupancy for the selected conditions.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>AI  AI Slot Recommendation</h3>
+
+<div class="card-sub">
+Smart recommendation based on distance,
+slot characteristics, demand and vehicle type.
+</div>
+
+
+<div class="ai-form">
+
+<div class="field">
+
+<label>VEHICLE TYPE</label>
+
+<select id="vehicleType">
+
+<option value="Car">Car</option>
+<option value="SUV">SUV</option>
+<option value="Bike">Bike</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>WEATHER</label>
+
+<select id="recWeather">
+
+<option value="0">Normal</option>
+<option value="1">Rainy</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>EVENT</label>
+
+<select id="recEvent">
+
+<option value="0">No Event</option>
+<option value="1">Major Event</option>
+
+</select>
+
+</div>
+
+<button
+class="ai-button"
+onclick="runRecommendation()"
+>
+Find Best Slot
+</button>
+
+</div>
+
+
+<div id="recResult" class="ai-result">
+
+<div class="big" id="recommended">
+- 
+</div>
+
+<p id="recommendationText">
+AI recommendation will appear here.
+</p>
+
+</div>
+
+
+<div class="demand">
+
+<div class="demand-title">
+CURRENT DEMAND
+</div>
+
+<div class="demand-value" id="demand">
+Loading...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section-title">
+
+<h2>Live slot monitoring</h2>
+
+<p>Owner view of all parking spaces.</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>Parking slots A1 - C5</h3>
+
+<div class="slots" id="slotGrid"></div>
+
+<div class="refresh">
+â— Live data · Auto refresh every 5 seconds
+</div>
+
+</div>
+
+
+<div class="section-title">
+
+<h2>Recent parking bookings</h2>
+
+<p>Latest transactions recorded by SmartPark.</p>
+
+</div>
+
+
+<div class="card booking-card">
+
+<table>
+
+<thead>
+
+<tr>
+<th>ID</th>
+<th>Vehicle</th>
+<th>Type</th>
+<th>Slot</th>
+<th>Duration</th>
+<th>Amount</th>
+<th>Payment</th>
+</tr>
+
+</thead>
+
+<tbody id="bookingTable">
+
+<tr>
+<td colspan="7" class="empty">
+Loading booking data...
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<script>
+
+const slots = [
+"A1","A2","A3","A4","A5",
+"B1","B2","B3","B4","B5",
+"C1","C2","C3","C4","C5"
+];
+
+
+async function loadDashboard(){
+
+try{
+
+const statusResponse =
+await fetch("/api/parking-status");
+
+const status =
+await statusResponse.json();
+
+
+document.getElementById("total")
+.innerText = status.total;
+
+document.getElementById("available")
+.innerText = status.available;
+
+document.getElementById("occupied")
+.innerText = status.occupied;
+
+
+const booked =
+status.booked_slots || [];
+
+
+const grid =
+document.getElementById("slotGrid");
+
+grid.innerHTML = "";
+
+
+slots.forEach(slot => {
+
+const div =
+document.createElement("div");
+
+div.className =
+"slot " +
+(booked.includes(slot)
+? "occupied"
+: "available");
+
+div.innerText =
+slot +
+" · " +
+(booked.includes(slot)
+? "Occupied"
+: "Available");
+
+grid.appendChild(div);
+
+});
+
+
+let demand = "LOW";
+
+const occupancy =
+(status.occupied / status.total) * 100;
+
+
+if(occupancy >= 80)
+demand = "HIGH";
+
+else if(occupancy >= 50)
+demand = "MEDIUM";
+
+
+document.getElementById("demand")
+.innerText = demand;
+
+
+const bookingResponse =
+await fetch("/api/bookings");
+
+const bookings =
+await bookingResponse.json();
+
+
+document.getElementById("bookingsCount")
+.innerText = bookings.length;
+
+
+const table =
+document.getElementById("bookingTable");
+
+table.innerHTML = "";
+
+
+if(bookings.length === 0){
+
+table.innerHTML =
+`
+<tr>
+<td colspan="7" class="empty">
+No bookings yet.
+</td>
+</tr>
+`;
+
+return;
+
+}
+
+
+bookings.slice(0,10).forEach(b => {
+
+const row =
+document.createElement("tr");
+
+row.innerHTML =
+`
+<td>${b.id}</td>
+<td>${b.vehicle_number}</td>
+<td>${b.vehicle_type}</td>
+<td><strong>${b.slot}</strong></td>
+<td>${b.duration} hour(s)</td>
+<td>₹${b.amount}</td>
+<td>${b.payment_status || "PENDING"}</td>
+`;
+
+table.appendChild(row);
+
+});
+
+
+}catch(error){
+
+console.log(error);
+
+}
+
+}
+
+
+async function runPrediction(){
+
+const result =
+document.getElementById("aiResult");
+
+const prediction =
+document.getElementById("prediction");
+
+
+result.classList.add("show");
+
+prediction.innerText = "...";
+
+
+try{
+
+const response =
+await fetch("/api/ai-predict",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+day:
+parseInt(
+document.getElementById("day").value
+),
+
+hour:
+parseInt(
+document.getElementById("hour").value
+),
+
+weather:
+parseInt(
+document.getElementById("weather").value
+),
+
+event:
+parseInt(
+document.getElementById("event").value
+)
+
+})
+
+});
+
+
+const data =
+await response.json();
+
+
+if(data.success){
+
+prediction.innerText =
+data.prediction;
+
+}else{
+
+prediction.innerText =
+"Error";
+
+}
+
+}catch(error){
+
+prediction.innerText =
+"Error";
+
+}
+
+}
+
+
+async function runRecommendation(){
+
+const result =
+document.getElementById("recResult");
+
+const recommended =
+document.getElementById("recommended");
+
+const text =
+document.getElementById("recommendationText");
+
+
+result.classList.add("show");
+
+recommended.innerText =
+"Searching...";
+
+
+try{
+
+const response =
+await fetch("/api/ai-recommend",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+vehicle_type:
+document.getElementById("vehicleType").value,
+
+weather:
+parseInt(
+document.getElementById("recWeather").value
+),
+
+event:
+parseInt(
+document.getElementById("recEvent").value
+)
+
+})
+
+});
+
+
+const data =
+await response.json();
+
+
+if(data.success){
+
+recommended.innerText =
+"Best slot: " +
+data.slot;
+
+text.innerText =
+"AI score: " +
+data.score +
+". This slot is currently the best available option.";
+
+}else{
+
+recommended.innerText =
+"No slot available";
+
+text.innerText =
+data.message ||
+"Parking is currently full.";
+
+}
+
+}catch(error){
+
+recommended.innerText =
+"Error";
+
+text.innerText =
+"Unable to connect to AI service.";
+
+}
+
+}
+
+
+loadDashboard();
+
+setInterval(
+loadDashboard,
+5000
+);
+
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,589 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartPark | AI Parking</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f7f8f6;
+    color:#173f2d;
+    line-height:1.5;
+}
+
+nav{
+    height:72px;
+    background:#fff;
+    border-bottom:1px solid #e5e8e5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 7%;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:800;
+    color:#174f38;
+    letter-spacing:-.5px;
+}
+
+.logo span{
+    color:#d89420;
+}
+
+.nav-links{
+    display:flex;
+    gap:30px;
+    align-items:center;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#52635b;
+    font-size:15px;
+    font-weight:600;
+}
+
+.nav-links a:hover{
+    color:#174f38;
+}
+
+.owner-btn{
+    background:#174f38;
+    color:#fff !important;
+    padding:11px 18px;
+    border-radius:8px;
+}
+
+.hero{
+    max-width:1180px;
+    margin:0 auto;
+    padding:85px 30px 55px;
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:60px;
+    align-items:center;
+}
+
+.tag{
+    display:inline-block;
+    color:#b8790f;
+    background:#fff4dc;
+    padding:7px 13px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:1px;
+    margin-bottom:20px;
+}
+
+h1{
+    font-size:54px;
+    line-height:1.08;
+    letter-spacing:-2px;
+    margin-bottom:22px;
+    color:#173f2d;
+}
+
+.hero-text{
+    color:#65736d;
+    font-size:18px;
+    max-width:560px;
+    margin-bottom:32px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+}
+
+.primary-btn,
+.secondary-btn{
+    display:inline-block;
+    text-decoration:none;
+    padding:15px 25px;
+    border-radius:9px;
+    font-weight:800;
+    font-size:15px;
+}
+
+.primary-btn{
+    background:#d89420;
+    color:#172b22;
+}
+
+.secondary-btn{
+    background:#fff;
+    color:#174f38;
+    border:1px solid #d8dfda;
+}
+
+.parking-visual{
+    background:#174f38;
+    border-radius:24px;
+    padding:28px;
+    min-height:360px;
+    position:relative;
+    overflow:hidden;
+}
+
+.parking-visual h2{
+    color:#fff;
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+.parking-visual p{
+    color:#c9d9d0;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+.road{
+    background:#315b48;
+    border-radius:15px;
+    padding:20px;
+    height:210px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.slot{
+    border:2px dashed #91b3a3;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    text-align:center;
+}
+
+.slot.available{
+    background:#d89420;
+    border:none;
+    color:#172b22;
+}
+
+.slot.occupied{
+    background:#65736d;
+    border:none;
+    opacity:.75;
+}
+
+.stats{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 30px 65px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.stat-card{
+    background:#fff;
+    border:1px solid #e3e8e4;
+    border-radius:14px;
+    padding:24px;
+}
+
+.stat-number{
+    font-size:28px;
+    font-weight:800;
+    color:#174f38;
+}
+
+.stat-label{
+    color:#718078;
+    font-size:14px;
+    margin-top:4px;
+}
+
+.features{
+    background:#fff;
+    padding:75px 30px;
+}
+
+.section{
+    max-width:1180px;
+    margin:auto;
+}
+
+.section-heading{
+    margin-bottom:35px;
+}
+
+.section-heading h2{
+    font-size:34px;
+    color:#173f2d;
+    margin-bottom:8px;
+}
+
+.section-heading p{
+    color:#718078;
+    max-width:620px;
+}
+
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.feature-card{
+    border:1px solid #e2e7e3;
+    border-radius:16px;
+    padding:28px;
+    background:#fbfcfb;
+}
+
+.feature-icon{
+    width:45px;
+    height:45px;
+    border-radius:10px;
+    background:#eaf1ec;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#174f38;
+    font-weight:900;
+    font-size:14px;
+    margin-bottom:20px;
+}
+
+.feature-card h3{
+    font-size:19px;
+    margin-bottom:9px;
+    color:#173f2d;
+}
+
+.feature-card p{
+    color:#718078;
+    font-size:14px;
+}
+
+.ai-section{
+    max-width:1180px;
+    margin:65px auto;
+    padding:0 30px;
+}
+
+.ai-box{
+    background:#174f38;
+    border-radius:20px;
+    padding:42px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+}
+
+.ai-box h2{
+    color:#fff;
+    font-size:31px;
+    margin-bottom:8px;
+}
+
+.ai-box p{
+    color:#cbdad2;
+    max-width:620px;
+    font-size:15px;
+}
+
+footer{
+    background:#102d21;
+    color:#c2d0c9;
+    text-align:center;
+    padding:28px;
+    font-size:13px;
+}
+
+@media(max-width:850px){
+
+    .hero{
+        grid-template-columns:1fr;
+        padding-top:55px;
+    }
+
+    h1{
+        font-size:42px;
+    }
+
+    .feature-grid,
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .ai-box{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .nav-links{
+        gap:12px;
+    }
+
+    .nav-links a:not(.owner-btn){
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+
+    <div class="logo">
+        Smart<span>Park</span>
+    </div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/parking">Find Parking</a>
+        <a href="/my-booking">My Booking</a>
+        <a href="/owner" class="owner-btn">For Owners</a>
+    </div>
+
+</nav>
+
+
+<section class="hero">
+
+    <div>
+
+        <div class="tag">
+            AI-POWERED PARKING
+        </div>
+
+        <h1>
+            Find your parking space before you reach there.
+        </h1>
+
+        <p class="hero-text">
+            SmartPark helps you discover nearby parking,
+            check live availability, predict parking demand
+            with AI and reserve your space in advance.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="/parking" class="primary-btn">
+                Find Parking
+            </a>
+
+            <a href="/parking" class="secondary-btn">
+                Explore AI Parking
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="parking-visual">
+
+        <h2>
+            Smart parking, simplified.
+        </h2>
+
+        <p>
+            Live parking availability with intelligent prediction.
+        </p>
+
+        <div class="road">
+
+            <div class="slot available">
+                A1<br>Available
+            </div>
+
+            <div class="slot">
+                A2
+            </div>
+
+            <div class="slot available">
+                A3<br>Available
+            </div>
+
+            <div class="slot occupied">
+                B1<br>Occupied
+            </div>
+
+            <div class="slot available">
+                B2<br>Available
+            </div>
+
+            <div class="slot">
+                B3
+            </div>
+
+            <div class="slot available">
+                C1<br>Available
+            </div>
+
+            <div class="slot occupied">
+                C2<br>Occupied
+            </div>
+
+            <div class="slot available">
+                C3<br>Available
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="stats">
+
+    <div class="stat-card">
+        <div class="stat-number">15</div>
+        <div class="stat-label">
+            Parking slots monitored
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-number">AI</div>
+        <div class="stat-label">
+            Demand prediction system
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">
+            Parking availability monitoring
+        </div>
+    </div>
+
+</section>
+
+
+<section class="features">
+
+    <div class="section">
+
+        <div class="section-heading">
+
+            <h2>
+                Everything you need to park smarter.
+            </h2>
+
+            <p>
+                A simple parking experience built around
+                real-time information and AI-based decision support.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    MAP
+                </div>
+
+                <h3>
+                    Find nearby parking
+                </h3>
+
+                <p>
+                    Explore available parking locations and
+                    choose a convenient place before you arrive.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    AI
+                </div>
+
+                <h3>
+                    AI demand prediction
+                </h3>
+
+                <p>
+                    Predict expected parking occupancy using
+                    time, day, weather and event conditions.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    BOOK
+                </div>
+
+                <h3>
+                    Reserve your space
+                </h3>
+
+                <p>
+                    Select an available parking slot and receive
+                    a digital booking confirmation.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="ai-section">
+
+    <div class="ai-box">
+
+        <div>
+
+            <h2>
+                Let AI help you choose your spot.
+            </h2>
+
+            <p>
+                SmartPark analyses parking conditions and recommends
+                a suitable parking slot based on predicted occupancy
+                and availability.
+            </p>
+
+        </div>
+
+        <a href="/parking" class="primary-btn">
+            Try AI Parking
+        </a>
+
+    </div>
+
+</section>
+
+
+<footer>
+    SmartPark | AI-Based Smart Parking Management and Prediction System
+</footer>
+
+</body>
+</html>

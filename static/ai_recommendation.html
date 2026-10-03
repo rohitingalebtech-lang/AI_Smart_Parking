@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Parking Recommendation</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            text-align: center;
+            padding: 28px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #111827;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #374151;
+        }
+
+        .result {
+            display: none;
+        }
+
+        .recommendation {
+            text-align: center;
+            padding: 25px;
+            background: #eef2ff;
+            border-radius: 15px;
+        }
+
+        .slot-name {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .score {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .detail {
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .detail strong {
+            display: block;
+            font-size: 20px;
+            margin-top: 5px;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .nav {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background: #111827;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        @media(max-width:700px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>🤖 AI Smart Parking Recommendation</h1>
+
+    <p>Find the most suitable available parking slot</p>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- INPUT CARD -->
+
+    <div class="card">
+
+        <h2>🔍 Parking Requirements</h2>
+
+        <div class="form-grid">
+
+
+            <div>
+
+                <label>Vehicle Type</label>
+
+                <select id="vehicleType">
+
+                    <option value="Car">🚗 Car</option>
+
+                    <option value="SUV">🚙 SUV</option>
+
+                    <option value="Bike">🏍️ Bike</option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>Parking Duration</label>
+
+                <select id="duration">
+
+                    <option value="1">1 Hour</option>
+
+                    <option value="2">2 Hours</option>
+
+                    <option value="3">3 Hours</option>
+
+                    <option value="4">4 Hours</option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>Weather</label>
+
+                <select id="weather">
+
+                    <option value="0">☀️ Normal</option>
+
+                    <option value="1">🌧️ Rainy</option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>Special Event</label>
+
+                <select id="event">
+
+                    <option value="0">No Event</option>
+
+                    <option value="1">🎉 Event Today</option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <button onclick="findRecommendation()">
+
+            🤖 Find Best Parking Slot
+
+        </button>
+
+
+        <div class="message" id="message"></div>
+
+    </div>
+
+
+
+    <!-- RESULT -->
+
+    <div class="card result" id="result">
+
+        <h2>🎯 AI Recommendation</h2>
+
+
+        <div class="recommendation">
+
+            <div>Recommended Parking Slot</div>
+
+            <div class="slot-name" id="recommendedSlot">
+
+                A1
+
+            </div>
+
+            <div class="score" id="score">
+
+                Suitability Score: 0%
+
+            </div>
+
+        </div>
+
+
+        <div class="details">
+
+
+            <div class="detail">
+
+                📏 Distance
+
+                <strong id="distance">
+
+                    -
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                🌤️ Coverage
+
+                <strong id="coverage">
+
+                    -
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                🤖 Predicted Occupancy
+
+                <strong id="occupancy">
+
+                    -
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                🚗 Vehicle
+
+                <strong id="vehicle">
+
+                    -
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                ⏱️ Duration
+
+                <strong id="durationResult">
+
+                    -
+
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                💰 Estimated Cost
+
+                <strong id="cost">
+
+                    -
+
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- NAVIGATION -->
+
+    <div class="nav">
+
+        <a href="/static/dashboard.html">
+
+            🏠 Dashboard
+
+        </a>
+
+
+        <a href="/static/parking_slots.html">
+
+            🅿️ Parking Slots
+
+        </a>
+
+
+        <a href="/static/live_parking.html">
+
+            🚦 Live Parking
+
+        </a>
+
+
+        <a href="/static/booking.html">
+
+            🎫 Booking
+
+        </a>
+
+
+        <a href="/static/admin.html">
+
+            👨‍💼 Admin
+
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* ==========================================
+   PARKING SLOT INFORMATION
+========================================== */
+
+const slots = {
+
+    A1: {
+        distance: 10,
+        covered: true,
+        busy: 30,
+        size: "normal"
+    },
+
+    A2: {
+        distance: 15,
+        covered: false,
+        busy: 70,
+        size: "large"
+    },
+
+    A3: {
+        distance: 20,
+        covered: true,
+        busy: 40,
+        size: "normal"
+    },
+
+    A4: {
+        distance: 25,
+        covered: false,
+        busy: 60,
+        size: "large"
+    },
+
+    A5: {
+        distance: 30,
+        covered: true,
+        busy: 50,
+        size: "normal"
+    },
+
+    B1: {
+        distance: 15,
+        covered: true,
+        busy: 35,
+        size: "large"
+    },
+
+    B2: {
+        distance: 20,
+        covered: false,
+        busy: 45,
+        size: "normal"
+    },
+
+    B3: {
+        distance: 25,
+        covered: true,
+        busy: 65,
+        size: "large"
+    },
+
+    B4: {
+        distance: 30,
+        covered: false,
+        busy: 55,
+        size: "normal"
+    },
+
+    B5: {
+        distance: 35,
+        covered: true,
+        busy: 40,
+        size: "large"
+    },
+
+    C1: {
+        distance: 20,
+        covered: false,
+        busy: 50,
+        size: "normal"
+    },
+
+    C2: {
+        distance: 25,
+        covered: true,
+        busy: 35,
+        size: "large"
+    },
+
+    C3: {
+        distance: 30,
+        covered: false,
+        busy: 45,
+        size: "normal"
+    },
+
+    C4: {
+        distance: 35,
+        covered: true,
+        busy: 70,
+        size: "large"
+    },
+
+    C5: {
+        distance: 40,
+        covered: false,
+        busy: 30,
+        size: "normal"
+    }
+
+};
+
+
+
+/* ==========================================
+   FIND RECOMMENDATION
+========================================== */
+
+async function findRecommendation() {
+
+    const vehicleType =
+        document.getElementById("vehicleType").value;
+
+    const duration =
+        parseInt(document.getElementById("duration").value);
+
+    const weather =
+        parseInt(document.getElementById("weather").value);
+
+    const event =
+        parseInt(document.getElementById("event").value);
+
+
+    const message =
+        document.getElementById("message");
+
+
+    message.textContent =
+        "🤖 AI analyzing available parking slots...";
+
+
+    try {
+
+
+        /* GET REAL-TIME PARKING STATUS */
+
+        const response =
+            await fetch("/api/parking-status");
+
+
+        const data =
+            await response.json();
+
+
+        const bookedSlots =
+            data.booked_slots || [];
+
+
+        let bestSlot = null;
+
+        let bestScore = -Infinity;
+
+        let bestInfo = null;
+
+
+
+        /* ======================================
+           AI SCORING
+        ====================================== */
+
+        for (const slot in slots) {
+
+
+            /* NEVER RECOMMEND BOOKED SLOT */
+
+            if (bookedSlots.includes(slot)) {
+
+                continue;
+
+            }
+
+
+            const info =
+                slots[slot];
+
+
+            let score = 100;
+
+
+            /* Distance */
+
+            score -=
+                info.distance * 0.25;
+
+
+            /* Lower congestion is better */
+
+            score -=
+                info.busy * 0.35;
+
+
+            /* Rain */
+
+            if (weather === 1) {
+
+                if (info.covered) {
+
+                    score += 30;
+
+                }
+
+                else {
+
+                    score -= 15;
+
+                }
+
+            }
+
+
+            /* Special event */
+
+            if (event === 1) {
+
+                score -=
+                    info.busy * 0.25;
+
+            }
+
+
+            /* Current parking occupancy */
+
+            const currentOccupancy =
+
+                data.total > 0
+
+                    ? (data.occupied / data.total) * 100
+
+                    : 0;
+
+
+            if (currentOccupancy >= 80) {
+
+                score -=
+                    info.busy * 0.30;
+
+            }
+
+            else if (currentOccupancy >= 60) {
+
+                score -=
+                    info.busy * 0.15;
+
+            }
+
+
+            /* Vehicle type */
+
+            if (vehicleType === "SUV") {
+
+                if (info.size === "large") {
+
+                    score += 15;
+
+                }
+
+            }
+
+            else if (vehicleType === "Bike") {
+
+                if (info.distance <= 25) {
+
+                    score += 10;
+
+                }
+
+            }
+
+            else if (vehicleType === "Car") {
+
+                if (info.size === "normal") {
+
+                    score += 5;
+
+                }
+
+            }
+
+
+            /* BEST SLOT */
+
+            if (score > bestScore) {
+
+                bestScore = score;
+
+                bestSlot = slot;
+
+                bestInfo = info;
+
+            }
+
+        }
+
+
+
+        /* ======================================
+           PARKING FULL
+        ====================================== */
+
+        if (!bestSlot) {
+
+            document.getElementById("result").style.display =
+                "none";
+
+            message.textContent =
+                "🔴 No parking slots are currently available.";
+
+            return;
+
+        }
+
+
+
+        /* ======================================
+           DYNAMIC PRICE
+        ====================================== */
+
+        let hourlyPrice = 40;
+
+
+        const currentOccupancy =
+
+            data.total > 0
+
+                ? (data.occupied / data.total) * 100
+
+                : 0;
+
+
+        if (currentOccupancy >= 80) {
+
+            hourlyPrice = 80;
+
+        }
+
+        else if (currentOccupancy >= 60) {
+
+            hourlyPrice = 60;
+
+        }
+
+
+        if (weather === 1) {
+
+            hourlyPrice += 10;
+
+        }
+
+
+        if (event === 1) {
+
+            hourlyPrice += 10;
+
+        }
+
+
+        const totalCost =
+            hourlyPrice * duration;
+
+
+
+        /* ======================================
+           DISPLAY RESULT
+        ====================================== */
+
+        document.getElementById("result").style.display =
+            "block";
+
+
+        document.getElementById("recommendedSlot").textContent =
+            bestSlot;
+
+
+        document.getElementById("score").textContent =
+
+            "Suitability Score: " +
+
+            Math.max(0, Math.min(100, Math.round(bestScore))) +
+
+            "%";
+
+
+        document.getElementById("distance").textContent =
+
+            bestInfo.distance +
+
+            " meters";
+
+
+        document.getElementById("coverage").textContent =
+
+            bestInfo.covered
+
+                ? "Covered"
+
+                : "Open";
+
+
+        document.getElementById("occupancy").textContent =
+
+            Math.round(currentOccupancy) +
+
+            "%";
+
+
+        document.getElementById("vehicle").textContent =
+            vehicleType;
+
+
+        document.getElementById("durationResult").textContent =
+
+            duration +
+
+            " hour(s)";
+
+
+        document.getElementById("cost").textContent =
+
+            "₹" +
+
+            totalCost;
+
+
+        message.textContent =
+
+            "🟢 AI recommendation generated using live parking data.";
+
+    }
+
+
+    catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+
+            "🔴 Unable to connect to parking server.";
+
+    }
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Live Parking Status</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .stat h3 {
+            margin: 0 0 10px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .stat strong {
+            font-size: 30px;
+        }
+
+        .parking-card {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+
+        .parking-card h2 {
+            text-align: center;
+        }
+
+        .parking-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .slot {
+            padding: 22px 10px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            border: 2px solid transparent;
+        }
+
+        .available {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+
+        .occupied {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+
+        .entry {
+            text-align: center;
+            margin-top: 25px;
+            padding: 12px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .legend {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .legend span {
+            margin: 0 10px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .green {
+            background: #22c55e;
+        }
+
+        .red {
+            background: #ef4444;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 18px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .nav {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background: #111827;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        @media(max-width:700px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .parking-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media(max-width:450px) {
+            .parking-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚦 Live Parking Status</h1>
+    <p>Real-time parking availability</p>
+</header>
+
+
+<div class="container">
+
+    <div class="stats">
+
+        <div class="stat">
+            <h3>Total Slots</h3>
+            <strong id="total">50</strong>
+        </div>
+
+        <div class="stat">
+            <h3>Available</h3>
+            <strong id="available">50</strong>
+        </div>
+
+        <div class="stat">
+            <h3>Occupied</h3>
+            <strong id="occupied">0</strong>
+        </div>
+
+        <div class="stat">
+            <h3>System</h3>
+            <strong>LIVE</strong>
+        </div>
+
+    </div>
+
+
+    <div class="parking-card">
+
+        <h2>🅿️ Current Slot Availability</h2>
+
+        <div class="parking-grid" id="parkingGrid"></div>
+
+        <div class="entry">
+            🚗 ENTRY / EXIT
+        </div>
+
+        <div class="legend">
+
+            <span>
+                <span class="dot green"></span>
+                Available
+            </span>
+
+            <span>
+                <span class="dot red"></span>
+                Occupied
+            </span>
+
+        </div>
+
+        <div class="status" id="status">
+            Connecting to parking server...
+        </div>
+
+    </div>
+
+
+    <div class="nav">
+
+        <a href="/static/dashboard.html">🏠 Dashboard</a>
+
+        <a href="/static/booking.html">🎫 Book Parking</a>
+
+        <a href="/static/ai_recommendation.html">🤖 AI Recommendation</a>
+
+        <a href="/static/admin.html">👨‍💼 Admin</a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const slots = [
+    "A1","A2","A3","A4","A5",
+    "B1","B2","B3","B4","B5",
+    "C1","C2","C3","C4","C5"
+];
+
+
+async function loadParkingStatus() {
+
+    try {
+
+        const response = await fetch("/api/parking-status");
+
+        const data = await response.json();
+
+        document.getElementById("total").textContent =
+            data.total;
+
+        document.getElementById("occupied").textContent =
+            data.occupied;
+
+        document.getElementById("available").textContent =
+            data.available;
+
+
+        const bookedSlots = data.booked_slots || [];
+
+        const grid = document.getElementById("parkingGrid");
+
+        grid.innerHTML = "";
+
+
+        slots.forEach(slot => {
+
+            const div = document.createElement("div");
+
+            div.classList.add("slot");
+
+            if (bookedSlots.includes(slot)) {
+
+                div.classList.add("occupied");
+
+                div.innerHTML =
+                    "🔴 " + slot + "<br><small>Occupied</small>";
+
+            } else {
+
+                div.classList.add("available");
+
+                div.innerHTML =
+                    "🟢 " + slot + "<br><small>Available</small>";
+            }
+
+            grid.appendChild(div);
+
+        });
+
+
+        document.getElementById("status").textContent =
+            "🟢 Live data updated • Last update: " +
+            new Date().toLocaleTimeString();
+
+    }
+
+    catch (error) {
+
+        document.getElementById("status").textContent =
+            "🔴 Unable to connect to parking server.";
+
+    }
+
+}
+
+
+// Load immediately
+loadParkingStatus();
+
+
+// Automatically refresh every 5 seconds
+setInterval(loadParkingStatus, 5000);
+
+</script>
+
+</body>
+</html>

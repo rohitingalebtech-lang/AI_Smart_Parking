@@ -1,0 +1,525 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Booking Confirmed | SmartPark</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f7f3;
+    color: #17251d;
+}
+
+nav {
+    height: 72px;
+    background: white;
+    border-bottom: 1px solid #e1e6e1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 800;
+    color: #174d35;
+}
+
+.logo span {
+    color: #c77b17;
+}
+
+.location {
+    background: #edf3ee;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.container {
+    width: 90%;
+    max-width: 850px;
+    margin: 45px auto 70px;
+}
+
+.success {
+    text-align: center;
+}
+
+.check {
+    width: 68px;
+    height: 68px;
+    margin: auto;
+    border-radius: 50%;
+    background: #dff1e5;
+    color: #27734a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 800;
+}
+
+.success small {
+    display: block;
+    margin-top: 18px;
+    color: #c77b17;
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-size: 11px;
+}
+
+.success h1 {
+    font-size: 36px;
+    margin-top: 7px;
+}
+
+.success p {
+    color: #758078;
+    margin-top: 7px;
+}
+
+.receipt {
+    background: white;
+    border: 1px solid #dfe5df;
+    border-radius: 20px;
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.receipt-head {
+    background: #173c2b;
+    color: white;
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.receipt-head h2 {
+    font-size: 20px;
+}
+
+.reference {
+    color: #c9d8ce;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.paid {
+    background: #dff1e5;
+    color: #276d46;
+    padding: 7px 12px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.receipt-body {
+    padding: 30px;
+}
+
+.section-title {
+    font-size: 12px;
+    color: #c77b17;
+    font-weight: 800;
+    letter-spacing: .8px;
+    margin-bottom: 17px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.item {
+    padding: 15px;
+    background: #f6f8f6;
+    border-radius: 10px;
+}
+
+.item span {
+    display: block;
+    color: #7c877f;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.item strong {
+    font-size: 14px;
+    color: #26382d;
+}
+
+.divider {
+    border-top: 1px dashed #d9dfda;
+    margin: 28px 0;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total span {
+    color: #68746c;
+    font-size: 13px;
+}
+
+.total strong {
+    font-size: 28px;
+    color: #173c2b;
+}
+
+.validity {
+    margin-top: 22px;
+    padding: 15px;
+    border-left: 4px solid #c77b17;
+    background: #fff8ed;
+    border-radius: 7px;
+    color: #695536;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.actions button,
+.actions a {
+    flex: 1;
+    padding: 13px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.print {
+    border: 1px solid #cfd8d1;
+    background: white;
+    color: #294236;
+}
+
+.home {
+    border: none;
+    background: #174d35;
+    color: white;
+}
+
+.note {
+    text-align: center;
+    margin-top: 18px;
+    color: #89928c;
+    font-size: 10px;
+}
+
+@media(max-width: 650px) {
+
+    .receipt-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .success h1 {
+        font-size: 29px;
+    }
+
+}
+
+@media print {
+
+    nav,
+    .actions,
+    .note {
+        display: none;
+    }
+
+    body {
+        background: white;
+    }
+
+    .container {
+        margin-top: 20px;
+    }
+
+    .receipt {
+        border: 1px solid #ccc;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<nav>
+
+    <div class="logo">
+        Smart<span>Park</span>
+    </div>
+
+    <div class="location">
+         PCMC
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+
+    <div class="success">
+
+        <div class="check">
+            âœ“
+        </div>
+
+        <small>
+            BOOKING CONFIRMED
+        </small>
+
+        <h1>
+            Your parking is reserved.
+        </h1>
+
+        <p>
+            Keep this booking receipt for your reference.
+        </p>
+
+    </div>
+
+
+    <div class="receipt">
+
+
+        <div class="receipt-head">
+
+            <div>
+
+                <h2>
+                    SmartPark Booking
+                </h2>
+
+                <div class="reference">
+                    Booking reference:
+                    {{ booking.reference }}
+                </div>
+
+            </div>
+
+            <div class="paid">
+                PAYMENT SUCCESSFUL
+            </div>
+
+        </div>
+
+
+        <div class="receipt-body">
+
+
+            <div class="section-title">
+                PARKING DETAILS
+            </div>
+
+
+            <div class="grid">
+
+
+                <div class="item">
+
+                    <span>
+                        Parking location
+                    </span>
+
+                    <strong>
+                        SmartPark Station
+                    </strong>
+
+                </div>
+
+
+                <div class="item">
+
+                    <span>
+                        Parking slot
+                    </span>
+
+                    <strong>
+                        {{ booking.slot }}
+                    </strong>
+
+                </div>
+
+
+                <div class="item">
+
+                    <span>
+                        Vehicle number
+                    </span>
+
+                    <strong>
+                        {{ booking.vehicle_number }}
+                    </strong>
+
+                </div>
+
+
+                <div class="item">
+
+                    <span>
+                        Vehicle type
+                    </span>
+
+                    <strong>
+                        {{ booking.vehicle_type }}
+                    </strong>
+
+                </div>
+
+
+                <div class="item">
+
+                    <span>
+                        Duration
+                    </span>
+
+                    <strong>
+
+                        {{ booking.duration }}
+
+                        {% if booking.duration == 1 %}
+                            hour
+                        {% else %}
+                            hours
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="item">
+
+                    <span>
+                        Booking time
+                    </span>
+
+                    <strong>
+                        {{ booking.booking_time }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            <div class="section-title">
+                PAYMENT
+            </div>
+
+
+            <div class="total">
+
+                <span>
+                    Amount paid
+                </span>
+
+                <strong>
+                    ₹{{ booking.amount }}
+                </strong>
+
+            </div>
+
+
+            <div class="validity">
+
+                <b>Parking valid until:</b>
+
+                {{ booking.expiry_time }}
+
+                <br>
+
+                Your slot will automatically become available
+                after the booking duration expires.
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="print"
+                    onclick="window.print()"
+                >
+                    ðŸ–¨ Print / Save Receipt
+                </button>
+
+
+                <a
+                    class="home"
+                    href="/parking"
+                >
+                    Find Another Parking
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="note">
+
+        SmartPark Version 1 · Demo payment environment ·
+        No real payment was collected.
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
+

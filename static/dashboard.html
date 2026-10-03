@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>AI Smart Parking</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            text-align: center;
+            padding: 45px 20px;
+        }
+
+        header h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
+            color: #d1d5db;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .welcome {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .welcome h2 {
+            color: #1f2937;
+        }
+
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .module {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .module:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon {
+            font-size: 50px;
+        }
+
+        .module h3 {
+            font-size: 23px;
+            color: #1f2937;
+        }
+
+        .module p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+        .ai {
+            border-top: 5px solid #2563eb;
+        }
+
+        .parking {
+            border-top: 5px solid #16a34a;
+        }
+
+        .booking {
+            border-top: 5px solid #ea580c;
+        }
+
+        .admin {
+            border-top: 5px solid #7c3aed;
+        }
+
+        .features {
+            margin-top: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .features h2 {
+            text-align: center;
+        }
+
+        .features ul {
+            line-height: 2;
+            font-size: 17px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            background: #111827;
+            color: white;
+        }
+
+        @media(max-width: 700px) {
+
+            .modules {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<header>
+
+    <h1>🚗 AI Smart Parking</h1>
+
+    <p>
+        Intelligent Parking Management & Prediction System
+    </p>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="welcome">
+
+        <h2>Welcome to Smart Parking Management</h2>
+
+        <p>
+            Use Artificial Intelligence to predict parking demand,
+            find suitable slots and manage parking efficiently.
+        </p>
+
+    </div>
+
+
+    <div class="modules">
+
+
+        <!-- AI PREDICTION -->
+
+        <div class="module ai">
+
+            <div class="icon">🤖</div>
+
+            <h3>AI Parking Prediction</h3>
+
+            <p>
+                Predict future parking occupancy using
+                day, time, weather and events.
+            </p>
+
+            <a
+                href="http://127.0.0.1:5000/"
+                class="button">
+                Open AI Prediction
+            </a>
+
+        </div>
+
+
+        <!-- PARKING SLOTS -->
+
+        <div class="module parking">
+
+            <div class="icon">🅿️</div>
+
+            <h3>Parking Slots</h3>
+
+            <p>
+                View available, occupied and reserved
+                parking slots in real time.
+            </p>
+
+            <a
+                href="/static/parking_slots.html"
+                class="button">
+                View Parking
+            </a>
+
+        </div>
+
+
+        <!-- BOOKING -->
+
+        <div class="module booking">
+
+            <div class="icon">🎫</div>
+
+            <h3>Book Parking</h3>
+
+            <p>
+                Select an available slot, choose duration
+                and confirm your parking booking.
+            </p>
+
+            <a
+                href="/static/booking.html"
+                class="button">
+                Book a Slot
+            </a>
+
+        </div>
+
+
+        <!-- ADMIN -->
+
+        <div class="module admin">
+
+            <div class="icon">🛠️</div>
+
+            <h3>Admin Dashboard</h3>
+
+            <p>
+                Monitor parking occupancy, AI predictions,
+                bookings and revenue analytics.
+            </p>
+
+            <a
+                href="/static/admin.html"
+                class="button">
+                Open Admin
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- AI FEATURES -->
+
+    <div class="features">
+
+        <h2>✨ Smart Parking Features</h2>
+
+        <ul>
+
+            <li>🤖 AI-based parking occupancy prediction</li>
+
+            <li>🎯 Intelligent parking slot recommendation</li>
+
+            <li>🅿️ Real-time parking slot management</li>
+
+            <li>🎫 Online parking booking</li>
+
+            <li>💰 Dynamic parking price calculation</li>
+
+            <li>📊 Admin analytics dashboard</li>
+
+            <li>🌦️ Weather and event-based prediction</li>
+
+        </ul>
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    <p>
+        AI Smart Parking Management System
+    </p>
+
+    <p>
+        BTech Artificial Intelligence & Data Science Project
+    </p>
+
+</footer>
+
+
+</body>
+</html>
